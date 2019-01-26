@@ -1,6 +1,8 @@
 const get = function get(request, response) {
   return Promise.resolve().then(() => {
-    response.send({});
+    response.send({
+      isOpenForRegistrations: this.config.server.isOpenForRegistrations
+    });
   });
 };
 

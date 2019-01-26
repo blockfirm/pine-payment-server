@@ -1,4 +1,9 @@
+/* eslint-disable lines-around-comment */
 const config = {
+  server: {
+    // Set to true to enable anyone to sign up for an account.
+    isOpenForRegistrations: true
+  },
   api: {
     version: 'v1',
     port: 8082,

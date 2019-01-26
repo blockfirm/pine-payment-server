@@ -64,7 +64,7 @@ Returns information about the server.
 
 ```
 {
-
+    isOpenForRegistrations: true (bool) Whether or not the server is open for registrations
 }
 ```
 

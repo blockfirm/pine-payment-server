@@ -7,12 +7,21 @@ describe('endpoints/info/get.js', () => {
   describe('#get(request, response)', () => {
     let fakeRequest;
     let fakeResponse;
+    let fakeContext;
 
     beforeEach(() => {
       fakeRequest = {};
 
       fakeResponse = {
         send: sinon.spy()
+      };
+
+      fakeContext = {
+        config: {
+          server: {
+            isOpenForRegistrations: true
+          }
+        }
       };
     });
 
@@ -24,16 +33,16 @@ describe('endpoints/info/get.js', () => {
     });
 
     it('returns a Promise', () => {
-      const returnedPromise = infoEndpoints.get(fakeRequest, fakeResponse);
+      const returnedPromise = infoEndpoints.get.call(fakeContext, fakeRequest, fakeResponse);
       assert(returnedPromise instanceof Promise);
     });
 
-    it('calls response.send() with an empty object', () => {
-      const returnedPromise = infoEndpoints.get(fakeRequest, fakeResponse);
+    it('calls response.send() with an object with isOpenForRegistrations as true', () => {
+      const returnedPromise = infoEndpoints.get.call(fakeContext, fakeRequest, fakeResponse);
 
       return returnedPromise.then(() => {
         assert(fakeResponse.send.called);
-        assert(fakeResponse.send.calledWithMatch({}));
+        assert(fakeResponse.send.calledWithMatch({ isOpenForRegistrations: true }));
       });
     });
   });
