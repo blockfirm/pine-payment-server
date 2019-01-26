@@ -1,0 +1,40 @@
+{
+  "name": "pine-payment-server",
+  "version": "0.1.0",
+  "description": "Implementation of the Pine Payment Protocol.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node build/index.js",
+    "dev": "node src/index.dev.js",
+    "build": "./node_modules/.bin/babel ./src --experimental --source-maps-inline -d ./build",
+    "test": "node_modules/.bin/nyc node_modules/.bin/_mocha --require @babel/register --exit -- \"test/**/*.test.js\"",
+    "lint": "./node_modules/.bin/eslint --ext .js src/ test/",
+    "coveralls": "node_modules/.bin/nyc report --reporter=text-lcov | node_modules/.bin/coveralls"
+  },
+  "author": "Timothy E. Johansson <timothy@blockfirm.se>",
+  "website": "https://pinewallet.co",
+  "copyright": "© 2019 Blockfirm AB",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blockfirm/pine-payment-server.git"
+  },
+  "dependencies": {
+    "redis": "^2.8.0",
+    "restify": "^7.2.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/register": "^7.0.0",
+    "babel-plugin-transform-builtin-extend": "^1.1.2",
+    "coveralls": "^3.0.2",
+    "eslint": "^4.7.1",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "proxyquire": "^1.8.0",
+    "sinon": "^4.0.0"
+  }
+}
