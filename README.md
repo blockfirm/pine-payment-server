@@ -100,6 +100,7 @@ for that database:
 | Method | Endpoint | Description |
 | --- | --- | --- |
 | GET | [/v1/info](#get-v1info) | Get information about the server |
+| GET | [/v1/users/:username](#get-v1usersusername) | Get a user by username |
 
 ### `GET` /v1/info
 
@@ -109,7 +110,21 @@ Returns information about the server.
 
 ```
 {
-    isOpenForRegistrations: true (bool) Whether or not the server is open for registrations
+    "isOpenForRegistrations": true (bool) Whether or not the server is open for registrations
+}
+```
+
+### `GET` /v1/users/:username
+
+Endpoint to get a user by username.
+
+#### Returns
+
+```
+{
+    "publicKey": "...", (string) An extended public key encoded as base58
+    "username": "",
+    "displayName": ""
 }
 ```
 
