@@ -15,6 +15,13 @@ const config = {
       maxKeys: 100000
     }
   },
+  database: {
+    dialect: 'mysql', // One of mysql, sqlite, postgres, and mssql.
+    host: 'localhost',
+    database: 'pine_payment_server',
+    username: 'pine',
+    password: ''
+  },
   redis: {
     host: '127.0.0.1',
     port: 6379

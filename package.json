@@ -20,8 +20,10 @@
     "url": "https://github.com/blockfirm/pine-payment-server.git"
   },
   "dependencies": {
+    "mysql2": "^1.6.4",
     "redis": "^2.8.0",
-    "restify": "^7.2.1"
+    "restify": "^7.2.1",
+    "sequelize": "^4.42.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
