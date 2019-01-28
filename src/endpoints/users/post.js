@@ -1,7 +1,7 @@
 import bs58check from 'bs58check';
 import Sequelize from 'sequelize';
 
-import { HttpBadRequest, HttpConflict } from '../../errors';
+import { HttpBadRequest, HttpConflict, HttpForbidden } from '../../errors';
 import getUserIdFromPublicKey from '../../crypto/getUserIdFromPublicKey';
 import verifySignature from '../../crypto/verify';
 
@@ -27,6 +27,10 @@ const post = function post(request, response) {
       [Sequelize.Op.or]: [{ id }, { username }]
     }
   };
+
+  if (!this.config.server.isOpenForRegistrations) {
+    throw new HttpForbidden('Server is not open for registrations');
+  }
 
   try {
     if (!verifySignature(username, signature, id)) {
