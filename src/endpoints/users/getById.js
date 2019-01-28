@@ -13,14 +13,11 @@ const getById = function getById(request, response) {
     }
 
     const query = {
-      where: { username },
-      limit: 1
+      where: { username }
     };
 
-    return this.database.user.findAll(query)
-      .then((users) => {
-        const user = users[0];
-
+    return this.database.user.findOne(query)
+      .then((user) => {
         if (!user) {
           throw new HttpNotFound('User not found');
         }
