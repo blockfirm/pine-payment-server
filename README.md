@@ -101,6 +101,7 @@ for that database:
 | --- | --- | --- |
 | GET | [/v1/info](#get-v1info) | Get information about the server |
 | GET | [/v1/users/:username](#get-v1usersusername) | Get a user by username |
+| POST | [/v1/users](#post-v1users) | Create a new user |
 
 ### `GET` /v1/info
 
@@ -122,11 +123,32 @@ Endpoint to get a user by username.
 
 ```
 {
-    "publicKey": "...", (string) An extended public key encoded as base58
-    "username": "",
-    "displayName": ""
+    "id": "", (string) User ID - a hash 160 of the user's public key
+    "publicKey": "", (string) A public key encoded as base58check
+    "username": "", (string) Username of the user
+    "displayName": "" (string) Display name of the user
 }
 ```
+
+### `POST` /v1/users
+
+Endpoint to create a new user.
+
+#### Body
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | *string* | User ID - A base58check-encoded hash 160 (`ripemd160(sha256(publicKey))`) of user's public key |
+| publicKey | *string* | A public key encoded as base58check |
+| username | *string* | Username of the user. Lowercase `a-z`, `0-9`, `_`, and `.` |
+| displayName | *string* | Display name of the user. Maximum 50 characters |
+| signature | *string* | Signature of the username using user's private key (`secp256k1.sign(sha256(sha256(username)), privateKey).toBase64()` with recovery) |
+
+#### Returns
+
+Returns the created user as JSON.
 
 ### Error handling
 

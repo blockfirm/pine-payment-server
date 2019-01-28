@@ -2,7 +2,28 @@
 const config = {
   server: {
     // Set to true to enable anyone to sign up for an account.
-    isOpenForRegistrations: true
+    isOpenForRegistrations: true,
+
+    usernameMaxLength: 15,
+    usernameMinLength: 3,
+
+    // A list of reserved usernames as strings or RegExps.
+    reservedUsernames: [
+      'info',
+      'help',
+      'support',
+      'abuse',
+      'contact',
+      'root',
+      'webmaster',
+      'admin',
+      'administrator',
+      'pay',
+      'payments',
+      'pine',
+      'wallet',
+      'donate'
+    ]
   },
   api: {
     version: 'v1',
