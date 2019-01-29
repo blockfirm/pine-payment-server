@@ -23,6 +23,7 @@ const getById = function getById(request, response) {
         }
 
         response.send({
+          id: user.id,
           publicKey: user.publicKey,
           username: user.username,
           displayName: user.displayName
