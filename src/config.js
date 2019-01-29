@@ -27,7 +27,7 @@ const config = {
   },
   api: {
     version: 'v1',
-    port: 8082,
+    port: 50428,
     rateLimit: {
       burst: 10,
       rate: 1,
