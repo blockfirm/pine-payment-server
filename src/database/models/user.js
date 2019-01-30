@@ -26,9 +26,17 @@ export default {
     allowNull: false,
     validate: {
       is: ['^[a-z0-9\\._]+$'],
-      max: config.server.usernameMaxLength,
-      min: config.server.usernameMinLength,
 
+      isNotTooLong(username) {
+        if (username.length > config.server.usernameMaxLength) {
+          throw new Error('Username is too long');
+        }
+      },
+      isNotTooShort(username) {
+        if (username.length < config.server.usernameMinLength) {
+          throw new Error('Username is too short');
+        }
+      },
       isNotReserved(username) {
         config.server.reservedUsernames.forEach((reservedUsername) => {
           if (reservedUsername instanceof RegExp) {
