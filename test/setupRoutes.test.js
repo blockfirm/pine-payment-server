@@ -32,6 +32,13 @@ describe('setupRoutes.js', () => {
       assert(fakeServer.get.calledWithMatch('/v1/info'));
     });
 
+    it('registers the route GET /v1/users', () => {
+      setupRoutes(fakeServer);
+
+      assert(fakeServer.get.called);
+      assert(fakeServer.get.calledWithMatch('/v1/users'));
+    });
+
     it('registers the route GET /v1/users/:id', () => {
       setupRoutes(fakeServer);
 
@@ -48,7 +55,7 @@ describe('setupRoutes.js', () => {
 
     it('wraps each endpoint with wrapEndpoint()', () => {
       setupRoutes(fakeServer);
-      assert.equal(wrapEndpointSpy.callCount, 3);
+      assert.equal(wrapEndpointSpy.callCount, 4);
     });
   });
 });

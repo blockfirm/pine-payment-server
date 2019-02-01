@@ -100,7 +100,8 @@ for that database:
 | Method | Endpoint | Description |
 | --- | --- | --- |
 | GET | [/v1/info](#get-v1info) | Get information about the server |
-| GET | [/v1/users/:username](#get-v1usersusername) | Get a user by username |
+| GET | [/v1/users](#get-v1users) | Search for users by username |
+| GET | [/v1/users/:id](#get-v1usersid) | Get a user by ID |
 | POST | [/v1/users](#post-v1users) | Create a new user |
 
 ### `GET` /v1/info
@@ -115,9 +116,33 @@ Returns information about the server.
 }
 ```
 
-### `GET` /v1/users/:username
+### `GET` /v1/users
 
-Endpoint to get a user by username.
+Endpoint to search for users by username.
+
+#### Query String Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| username | *string* | Required. Comma-separated list of usernames to search for. Maximum 50 usernames per request |
+
+#### Returns
+
+```
+[
+    {
+        "id": "", (string) User ID - a hash 160 of the user's public key
+        "publicKey": "", (string) A public key encoded as base58check
+        "username": "", (string) Username of the user
+        "displayName": "" (string) Display name of the user
+    },
+    ...
+]
+```
+
+### `GET` /v1/users/:id
+
+Endpoint to get a user by ID.
 
 #### Returns
 
