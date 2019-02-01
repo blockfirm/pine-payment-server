@@ -4,16 +4,16 @@ const getById = function getById(request, response) {
   const params = request.params;
 
   return Promise.resolve().then(() => {
-    const username = params.id;
+    const { id } = params;
 
-    if (!username || typeof username !== 'string') {
+    if (!id || typeof id !== 'string') {
       throw new HttpBadRequest(
-        'The username parameter must be a string'
+        'The id parameter must be a string'
       );
     }
 
     const query = {
-      where: { username }
+      where: { id }
     };
 
     return this.database.user.findOne(query)
