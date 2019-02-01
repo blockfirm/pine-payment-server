@@ -4,7 +4,7 @@ const config = {
     // Set to true to enable anyone to sign up for an account.
     isOpenForRegistrations: true,
 
-    usernameMaxLength: 15,
+    usernameMaxLength: 20,
     usernameMinLength: 3,
 
     // A list of reserved usernames as strings or RegExps.
