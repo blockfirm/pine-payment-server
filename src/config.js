@@ -22,7 +22,9 @@ const config = {
       'payments',
       'pine',
       'wallet',
-      'donate'
+      'donate',
+      '.',
+      '_'
     ]
   },
   api: {
