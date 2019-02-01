@@ -5,7 +5,7 @@ const config = {
     isOpenForRegistrations: true,
 
     usernameMaxLength: 20,
-    usernameMinLength: 3,
+    usernameMinLength: 1,
 
     // A list of reserved usernames as strings or RegExps.
     reservedUsernames: [
