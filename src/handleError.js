@@ -1,5 +1,5 @@
 const handleError = (error, response) => {
-  const status = error.status || error.statusCode || 500;
+  const status = error.statusCode || 500;
   const code = error.code || 'Error';
   const message = error.message || 'Unknown error';
 

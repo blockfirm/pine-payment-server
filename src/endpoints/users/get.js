@@ -1,4 +1,4 @@
-import { HttpBadRequest } from '../../errors';
+import errors from 'restify-errors';
 
 const getUsernamesFromParam = (usernameParam) => {
   let usernames = usernameParam.split(',');
@@ -15,7 +15,7 @@ const get = function get(request, response) {
 
   return Promise.resolve().then(() => {
     if (!params.username || typeof params.username !== 'string') {
-      throw new HttpBadRequest(
+      throw new errors.BadRequestError(
         'The username field must be a string of comma-separated usernames'
       );
     }
@@ -23,13 +23,13 @@ const get = function get(request, response) {
     const usernames = getUsernamesFromParam(params.username);
 
     if (usernames.length === 0) {
-      throw new HttpBadRequest(
+      throw new errors.BadRequestError(
         'At least one username must be provided'
       );
     }
 
     if (usernames.length > 50) {
-      throw new HttpBadRequest(
+      throw new errors.BadRequestError(
         'Maximum 50 usernames are allowed per request'
       );
     }

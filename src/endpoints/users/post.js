@@ -1,7 +1,7 @@
 import bs58check from 'bs58check';
 import Sequelize from 'sequelize';
+import errors from 'restify-errors';
 
-import { HttpBadRequest, HttpConflict, HttpForbidden } from '../../errors';
 import getUserIdFromPublicKey from '../../crypto/getUserIdFromPublicKey';
 import verifySignature from '../../crypto/verify';
 
@@ -29,7 +29,7 @@ const post = function post(request, response) {
   };
 
   if (!this.config.server.isOpenForRegistrations) {
-    throw new HttpForbidden('Server is not open for registrations');
+    throw new errors.ForbiddenError('Server is not open for registrations');
   }
 
   try {
@@ -37,7 +37,7 @@ const post = function post(request, response) {
       throw new Error('Verification failed');
     }
   } catch (error) {
-    throw new HttpBadRequest(`Invalid signature: ${error.message}`);
+    throw new errors.BadRequestError(`Invalid signature: ${error.message}`);
   }
 
   try {
@@ -45,23 +45,23 @@ const post = function post(request, response) {
       throw new Error('Public key does not match user ID');
     }
   } catch (error) {
-    throw new HttpBadRequest(`Invalid public key: ${error.message}`);
+    throw new errors.BadRequestError(`Invalid public key: ${error.message}`);
   }
 
   return this.database.user.findOne(query)
     .then((existingUser) => {
       if (existingUser) {
         if (user.id === existingUser.id) {
-          throw new HttpConflict('A user with the same ID already exists');
+          throw new errors.ConflictError('A user with the same ID already exists');
         }
 
         if (user.username === existingUser.username) {
-          throw new HttpConflict('A user with the same username already exists');
+          throw new errors.ConflictError('A user with the same username already exists');
         }
       }
 
       return this.database.user.create(user).catch((error) => {
-        throw new HttpBadRequest(error.message);
+        throw new errors.BadRequestError(error.message);
       });
     })
     .then(() => {

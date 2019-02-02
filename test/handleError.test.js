@@ -31,7 +31,7 @@ describe('handleError.js', () => {
       const errorMessage = 'bacd8b78-cb98-43e0-8600-63bc6e88a8af';
       const error = new Error(errorMessage);
 
-      error.status = errorStatus;
+      error.statusCode = errorStatus;
       handleError(error, fakeResponse);
 
       const firstArgument = console.error.getCall(0).args[0];
@@ -46,7 +46,7 @@ describe('handleError.js', () => {
       const errorMessage = '254db1ff-ca36-41e8-b7c3-a96ec2d944d9';
       const error = new Error(errorMessage);
 
-      error.status = errorStatus;
+      error.statusCode = errorStatus;
 
       handleError(error, fakeResponse);
 

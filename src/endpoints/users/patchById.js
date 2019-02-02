@@ -1,5 +1,4 @@
 import errors from 'restify-errors';
-import { HttpBadRequest, HttpNotFound } from '../../errors';
 
 const patchById = function patchById(request, response) {
   const params = request.params;
@@ -8,7 +7,7 @@ const patchById = function patchById(request, response) {
     const { id, displayName } = params;
 
     if (!id || typeof id !== 'string') {
-      throw new HttpBadRequest('The id parameter must be a string');
+      throw new errors.BadRequestError('The id parameter must be a string');
     }
 
     if (request.userId !== id) {
@@ -16,7 +15,7 @@ const patchById = function patchById(request, response) {
     }
 
     if (displayName === undefined) {
-      throw new HttpBadRequest('Nothing to update');
+      throw new errors.BadRequestError('Nothing to update');
     }
 
     const query = {
@@ -25,7 +24,7 @@ const patchById = function patchById(request, response) {
 
     return this.database.user.findOne(query).then((user) => {
       if (!user) {
-        throw new HttpNotFound('User not found');
+        throw new errors.NotFoundError('User not found');
       }
 
       user.displayName = displayName;

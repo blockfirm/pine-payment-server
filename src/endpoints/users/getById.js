@@ -1,4 +1,4 @@
-import { HttpBadRequest, HttpNotFound } from '../../errors';
+import errors from 'restify-errors';
 
 const getById = function getById(request, response) {
   const params = request.params;
@@ -7,7 +7,7 @@ const getById = function getById(request, response) {
     const { id } = params;
 
     if (!id || typeof id !== 'string') {
-      throw new HttpBadRequest(
+      throw new errors.BadRequestError(
         'The id parameter must be a string'
       );
     }
@@ -19,7 +19,7 @@ const getById = function getById(request, response) {
     return this.database.user.findOne(query)
       .then((user) => {
         if (!user) {
-          throw new HttpNotFound('User not found');
+          throw new errors.NotFoundError('User not found');
         }
 
         response.send({
