@@ -1,9 +1,7 @@
 import bs58check from 'bs58check';
 import Sequelize from 'sequelize';
 import errors from 'restify-errors';
-
 import getUserIdFromPublicKey from '../../crypto/getUserIdFromPublicKey';
-import verifySignature from '../../crypto/verify';
 
 const verifyPublicKey = (publicKey, userId) => {
   const publicKeyBuffer = bs58check.decode(publicKey);
@@ -13,7 +11,8 @@ const verifyPublicKey = (publicKey, userId) => {
 };
 
 const post = function post(request, response) {
-  const { id, publicKey, username, displayName, signature } = request.params;
+  const { publicKey, username, displayName } = request.params;
+  const id = request.userId;
 
   const user = {
     id,
@@ -32,17 +31,13 @@ const post = function post(request, response) {
     throw new errors.ForbiddenError('Server is not open for registrations');
   }
 
-  try {
-    if (!verifySignature(username, signature, id)) {
-      throw new Error('Verification failed');
-    }
-  } catch (error) {
-    throw new errors.BadRequestError(`Invalid signature: ${error.message}`);
+  if (!id) {
+    throw new errors.UnauthorizedError('Cannot create user without authentication');
   }
 
   try {
     if (!verifyPublicKey(publicKey, id)) {
-      throw new Error('Public key does not match user ID');
+      throw new Error('Public key does not match authenticated user ID');
     }
   } catch (error) {
     throw new errors.BadRequestError(`Invalid public key: ${error.message}`);

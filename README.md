@@ -144,7 +144,7 @@ Endpoint to search for users by username.
 
 ### `POST` /v1/users
 
-Endpoint to create a new user.
+Endpoint to create a new user. Requires [authentication](#authentication).
 
 #### Body
 
@@ -152,11 +152,9 @@ As JSON:
 
 | Name | Type | Description |
 | --- | --- | --- |
-| id | *string* | User ID - A base58check-encoded hash 160 (`ripemd160(sha256(publicKey))`) of user's public key |
-| publicKey | *string* | A public key encoded as base58check |
-| username | *string* | Username of the user. Lowercase `a-z`, `0-9`, `_`, and `.` |
-| displayName | *string* | Display name of the user. Maximum 50 characters |
-| signature | *string* | Signature of the username using user's private key (`secp256k1.sign(sha256(sha256(username)), privateKey).toBase64()` with recovery) |
+| publicKey | *string* | A public key encoded as base58check. Must match the authenticated user |
+| username | *string* | Username of the user. Lowercase `a-z`, `0-9`, `_`, and `.`. Maximum 20 characters |
+| displayName | *string* | Optional display name of the user. Maximum 50 characters |
 
 #### Returns
 
