@@ -35,12 +35,21 @@ const createRoutesForEndpoints = (server, namespace, endpoints, context) => {
       let serverMethod = method;
       let serverPath = path;
 
-      if (method === 'getById') {
-        serverMethod = 'get';
-        serverPath = `${path}/:id`;
-      } else if (method === 'deleteById') {
-        serverMethod = 'del';
-        serverPath = `${path}/:id`;
+      switch (method) {
+        case 'getById':
+          serverMethod = 'get';
+          serverPath = `${path}/:id`;
+          break;
+
+        case 'deleteById':
+          serverMethod = 'del';
+          serverPath = `${path}/:id`;
+          break;
+
+        case 'patchById':
+          serverMethod = 'patch';
+          serverPath = `${path}/:id`;
+          break;
       }
 
       if (rateLimiter) {

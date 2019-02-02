@@ -19,6 +19,7 @@ secure and private manner.
 * [API Docs](#api)
   * [Endpoints](#endpoints)
   * [Error handling](#error-handling)
+  * [Authentication](#authentication)
   * [Rate limiting](#rate-limiting)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
@@ -101,8 +102,9 @@ for that database:
 | --- | --- | --- |
 | GET | [/v1/info](#get-v1info) | Get information about the server |
 | GET | [/v1/users](#get-v1users) | Search for users by username |
-| GET | [/v1/users/:id](#get-v1usersid) | Get a user by ID |
 | POST | [/v1/users](#post-v1users) | Create a new user |
+| GET | [/v1/users/:id](#get-v1usersid) | Get a user by ID |
+| PATCH | [/v1/users/:id](#patch-v1usersid) | Update a user by ID |
 
 ### `GET` /v1/info
 
@@ -140,21 +142,6 @@ Endpoint to search for users by username.
 ]
 ```
 
-### `GET` /v1/users/:id
-
-Endpoint to get a user by ID.
-
-#### Returns
-
-```
-{
-    "id": "", (string) User ID - a hash 160 of the user's public key
-    "publicKey": "", (string) A public key encoded as base58check
-    "username": "", (string) Username of the user
-    "displayName": "" (string) Display name of the user
-}
-```
-
 ### `POST` /v1/users
 
 Endpoint to create a new user.
@@ -175,6 +162,37 @@ As JSON:
 
 Returns the created user as JSON.
 
+### `GET` /v1/users/:id
+
+Endpoint to get a user by ID.
+
+#### Returns
+
+```
+{
+    "id": "", (string) User ID - a hash 160 of the user's public key
+    "publicKey": "", (string) A public key encoded as base58check
+    "username": "", (string) Username of the user
+    "displayName": "" (string) Display name of the user
+}
+```
+
+### `PATCH` /v1/users/:id
+
+Endpoint to update a user by ID. Requires [authentication](#authentication).
+
+#### Body
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| displayName | *string* | Display name of the user. Maximum 50 characters |
+
+#### Returns
+
+Returns the updated user as JSON.
+
 ### Error handling
 
 Errors are returned as JSON in the following format:
@@ -184,6 +202,27 @@ Errors are returned as JSON in the following format:
     "error": "<error message>"
 }
 ```
+
+### Authentication
+
+Some endpoints require authentication using HTTP Basic Authorization. That can be done by setting
+the `Authorization` header to the following:
+
+```
+Basic <credentials>
+```
+
+`<credentials>` must be replaced with a base64-encoded string of the user ID and a signature of the
+raw request body:
+
+```
+base64('<userId>:<signature>')
+```
+
+The **User ID** is a base58check-encoded hash 160 (`ripemd160(sha256(publicKey))`) of the user's public key.
+
+The **signature** is a signature of the raw request body using the user's private key
+(`secp256k1.sign(sha256(sha256(body)), privateKey).toBase64()` with recovery).
 
 ### Rate limiting
 
