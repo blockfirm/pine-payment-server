@@ -51,7 +51,7 @@ describe('handleError.js', () => {
       handleError(error, fakeResponse);
 
       assert(fakeResponse.send.calledOnce);
-      assert(fakeResponse.send.calledWith(errorStatus, { error: errorMessage }));
+      assert(fakeResponse.send.calledWith(errorStatus, { code: 'Error', message: errorMessage }));
     });
 
     describe('when error.status is undefined', () => {
@@ -73,7 +73,7 @@ describe('handleError.js', () => {
         handleError(error, fakeResponse);
 
         assert(fakeResponse.send.calledOnce);
-        assert(fakeResponse.send.calledWith(500, { error: 'Unknown error' }));
+        assert(fakeResponse.send.calledWith(500, { code: 'Error', message: 'Unknown error' }));
       });
     });
   });

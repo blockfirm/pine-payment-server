@@ -199,7 +199,8 @@ Errors are returned as JSON in the following format:
 
 ```json
 {
-    "error": "<error message>"
+    "code": "<error code>",
+    "message": "<error message>"
 }
 ```
 
