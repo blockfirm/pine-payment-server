@@ -13,7 +13,7 @@ const patchById = function patchById(request, response) {
     }
 
     if (request.userId !== id) {
-      throw new errors.UnauthorizedError('The authorized user is not allowed to update this user');
+      throw new errors.UnauthorizedError('The authenticated user is not authorized to update this user');
     }
 
     if (displayName === undefined) {
