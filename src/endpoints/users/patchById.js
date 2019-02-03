@@ -12,6 +12,10 @@ const patchById = function patchById(request, response) {
       throw new errors.BadRequestError('The id parameter must be a string');
     }
 
+    if (!request.userId) {
+      throw new errors.UnauthorizedError('Cannot update user without authentication');
+    }
+
     if (request.userId !== id) {
       throw new errors.UnauthorizedError('The authenticated user is not authorized to update this user');
     }
