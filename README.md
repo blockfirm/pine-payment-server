@@ -105,6 +105,7 @@ for that database:
 | POST | [/v1/users](#post-v1users) | Create a new user |
 | GET | [/v1/users/:id](#get-v1usersid) | Get a user by ID |
 | PATCH | [/v1/users/:id](#patch-v1usersid) | Update a user by ID |
+| GET | [/v1/users/:id/avatar](#get-v1usersidavatar) | Get a user's profile picture |
 | PUT | [/v1/users/:id/avatar](#put-v1usersidavatar) | Change a user's profile picture |
 
 ### `GET` /v1/info
@@ -191,6 +192,20 @@ As JSON:
 #### Returns
 
 Returns the updated user as JSON.
+
+### `GET` /v1/users/:id/avatar
+
+Endpoint to get a user's profile picture.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | *string* | ID of the user to get the profile picture for |
+
+#### Returns
+
+A 250x250px JPEG if the user has set a profile picture.
 
 ### `PUT` /v1/users/:id/avatar
 
