@@ -1,10 +1,12 @@
 import errors from 'restify-errors';
+import cleanDisplayName from '../../cleaners/cleanDisplayName';
 
 const patchById = function patchById(request, response) {
   const params = request.params;
 
   return Promise.resolve().then(() => {
-    const { id, displayName } = params;
+    const id = params.id;
+    const displayName = cleanDisplayName(params.displayName);
 
     if (!id || typeof id !== 'string') {
       throw new errors.BadRequestError('The id parameter must be a string');

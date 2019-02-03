@@ -1,7 +1,9 @@
 import bs58check from 'bs58check';
 import Sequelize from 'sequelize';
 import errors from 'restify-errors';
+
 import getUserIdFromPublicKey from '../../crypto/getUserIdFromPublicKey';
+import cleanDisplayName from '../../cleaners/cleanDisplayName';
 
 const verifyPublicKey = (publicKey, userId) => {
   const publicKeyBuffer = bs58check.decode(publicKey);
@@ -11,7 +13,8 @@ const verifyPublicKey = (publicKey, userId) => {
 };
 
 const post = function post(request, response) {
-  const { publicKey, username, displayName } = request.params;
+  const { publicKey, username } = request.params;
+  const displayName = cleanDisplayName(request.params.displayName);
   const id = request.userId;
 
   const user = {
