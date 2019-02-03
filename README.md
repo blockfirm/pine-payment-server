@@ -202,7 +202,7 @@ As JSON:
 
 | Name | Type | Description |
 | --- | --- | --- |
-| image | *string* | Base64-encoded image (bmp, gif, jpeg, png, or tiff). Must have a 1:1 aspect ratio. Minimum 240x240px. Maximum 50 KB |
+| image | *string* | Base64-encoded image (bmp, gif, jpeg, png, or tiff). Image will be scaled to 250x250px and cropped if the aspect ratio is not 1:1. Maximum 50 KB |
 
 #### Returns
 
