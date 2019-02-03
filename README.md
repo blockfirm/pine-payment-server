@@ -105,6 +105,7 @@ for that database:
 | POST | [/v1/users](#post-v1users) | Create a new user |
 | GET | [/v1/users/:id](#get-v1usersid) | Get a user by ID |
 | PATCH | [/v1/users/:id](#patch-v1usersid) | Update a user by ID |
+| PUT | [/v1/users/:id/avatar](#put-v1usersidavatar) | Change a user's profile picture |
 
 ### `GET` /v1/info
 
@@ -190,6 +191,26 @@ As JSON:
 #### Returns
 
 Returns the updated user as JSON.
+
+### `PUT` /v1/users/:id/avatar
+
+Endpoint to change a user's avatar. Requires [authentication](#authentication).
+
+#### Body
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| image | *string* | Base64-encoded image (bmp, gif, jpeg, png, or tiff). Must have a 1:1 aspect ratio. Minimum 240x240px. Maximum 50 KB |
+
+#### Returns
+
+```
+{
+    "checksum": "" (string) A hash of the image used for caching purposes
+}
+```
 
 ### Error handling
 

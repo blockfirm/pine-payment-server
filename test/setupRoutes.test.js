@@ -22,7 +22,8 @@ describe('setupRoutes.js', () => {
         get: sinon.spy(),
         post: sinon.spy(),
         del: sinon.spy(),
-        patch: sinon.spy()
+        patch: sinon.spy(),
+        put: sinon.spy()
       };
     });
 
@@ -40,6 +41,13 @@ describe('setupRoutes.js', () => {
       assert(fakeServer.get.calledWithMatch('/v1/users'));
     });
 
+    it('registers the route POST /v1/users', () => {
+      setupRoutes(fakeServer);
+
+      assert(fakeServer.post.called);
+      assert(fakeServer.post.calledWithMatch('/v1/users'));
+    });
+
     it('registers the route GET /v1/users/:id', () => {
       setupRoutes(fakeServer);
 
@@ -54,16 +62,16 @@ describe('setupRoutes.js', () => {
       assert(fakeServer.patch.calledWithMatch('/v1/users/:id'));
     });
 
-    it('registers the route POST /v1/users', () => {
+    it('registers the route PUT /v1/users/:id/avatar', () => {
       setupRoutes(fakeServer);
 
-      assert(fakeServer.post.called);
-      assert(fakeServer.post.calledWithMatch('/v1/users'));
+      assert(fakeServer.put.called);
+      assert(fakeServer.put.calledWithMatch('/v1/users/:id/avatar'));
     });
 
     it('wraps each endpoint with wrapEndpoint()', () => {
       setupRoutes(fakeServer);
-      assert.equal(wrapEndpointSpy.callCount, 5);
+      assert.equal(wrapEndpointSpy.callCount, 6);
     });
   });
 });
