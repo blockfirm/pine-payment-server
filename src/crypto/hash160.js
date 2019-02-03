@@ -1,8 +1,5 @@
 import createHash from 'create-hash';
-
-const sha256 = (buffer) => {
-  return createHash('sha256').update(buffer).digest();
-};
+import sha256 from './sha256';
 
 /**
  * Gets a Hash 160 hash of a buffer.
