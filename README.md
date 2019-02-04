@@ -209,6 +209,12 @@ Endpoint to get a user's profile picture.
 | --- | --- | --- |
 | id | *string* | ID of the user to get the profile picture for |
 
+#### Query String Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| byUsername | *boolean* | Set to `1` to get the profile picture by username instead of user ID |
+
 #### Returns
 
 A 250x250px JPEG if the user has set a profile picture.
