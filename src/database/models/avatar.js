@@ -6,11 +6,6 @@ export default {
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true
   },
-  userId: {
-    type: Sequelize.STRING,
-    unique: true,
-    allowNull: false
-  },
   checksum: {
     type: Sequelize.STRING,
     allowNull: false

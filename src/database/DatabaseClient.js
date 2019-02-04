@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
 import models from './models';
+import defineRelations from './defineRelations';
 
 export default class DatabaseClient {
   constructor(config) {
@@ -22,7 +23,14 @@ export default class DatabaseClient {
     this.sequelize.authenticate()
       .then(() => {
         console.log('[DB] ✅ Connected');
-        return this._defineModels();
+      })
+      .then(() => {
+        const definedModels = this._defineModels();
+        this._defineRelations(definedModels);
+        return this._sync(definedModels);
+      })
+      .then(() => {
+        console.log('[DB] ✅ Synced');
       })
       .catch((error) => {
         console.error('[DB] 🔥 Error: ', error.message);
@@ -30,14 +38,26 @@ export default class DatabaseClient {
   }
 
   _defineModels() {
-    const syncPromises = Object.keys(models).map((modelName) => {
-      const model = models[modelName];
-      this[modelName] = this.sequelize.define(modelName, model);
-      return this[modelName].sync();
+    const definedModels = {};
+
+    Object.keys(models).forEach((modelName) => {
+      const definedModel = this.sequelize.define(modelName, models[modelName]);
+      definedModels[modelName] = definedModel;
+      this[modelName] = definedModel;
     });
 
-    return Promise.all(syncPromises).then(() => {
-      console.log('[DB] ✅ Synced');
+    return definedModels;
+  }
+
+  _defineRelations(definedModels) {
+    defineRelations(definedModels);
+  }
+
+  _sync(definedModels) {
+    const syncPromises = Object.values(definedModels).map((definedModel) => {
+      return definedModel.sync();
     });
+
+    return Promise.all(syncPromises);
   }
 }
