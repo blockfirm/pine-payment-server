@@ -13,7 +13,11 @@ const getById = function getById(request, response) {
     }
 
     const query = {
-      where: { id }
+      where: { id },
+      include: [{
+        model: this.database.avatar,
+        attributes: ['checksum']
+      }]
     };
 
     return this.database.user.findOne(query)
@@ -26,7 +30,8 @@ const getById = function getById(request, response) {
           id: user.id,
           publicKey: user.publicKey,
           username: user.username,
-          displayName: user.displayName
+          displayName: user.displayName,
+          avatar: user.avatar
         });
       });
   });

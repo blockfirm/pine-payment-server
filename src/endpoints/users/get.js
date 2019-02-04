@@ -35,7 +35,11 @@ const get = function get(request, response) {
     }
 
     const query = {
-      where: { username: usernames }
+      where: { username: usernames },
+      include: [{
+        model: this.database.avatar,
+        attributes: ['checksum']
+      }]
     };
 
     return this.database.user.findAll(query)
@@ -44,7 +48,8 @@ const get = function get(request, response) {
           id: user.id,
           publicKey: user.publicKey,
           username: user.username,
-          displayName: user.displayName
+          displayName: user.displayName,
+          avatar: user.avatar
         }));
       })
       .then((users) => {

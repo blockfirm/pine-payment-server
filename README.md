@@ -138,7 +138,10 @@ Endpoint to search for users by username.
         "id": "", (string) User ID - a hash 160 of the user's public key
         "publicKey": "", (string) A public key encoded as base58check
         "username": "", (string) Username of the user
-        "displayName": "" (string) Display name of the user
+        "displayName": "", (string) Display name of the user
+        "avatar": { (object) Metadata about the user's avatar. Null if the user doesn't have any
+            "checksum": "" (string) A checksum of the image
+        }
     },
     ...
 ]
@@ -173,7 +176,10 @@ Endpoint to get a user by ID.
     "id": "", (string) User ID - a hash 160 of the user's public key
     "publicKey": "", (string) A public key encoded as base58check
     "username": "", (string) Username of the user
-    "displayName": "" (string) Display name of the user
+    "displayName": "", (string) Display name of the user
+    "avatar": { (object) Metadata about the user's avatar. Null if the user doesn't have any
+        "checksum": "" (string) A checksum of the image
+    }
 }
 ```
 
