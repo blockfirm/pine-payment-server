@@ -107,6 +107,8 @@ for that database:
 | PATCH | [/v1/users/:id](#patch-v1usersid) | Update a user by ID |
 | GET | [/v1/users/:id/avatar](#get-v1usersidavatar) | Get a user's profile picture |
 | PUT | [/v1/users/:id/avatar](#put-v1usersidavatar) | Change a user's profile picture |
+| POST | [/v1/users/:userId/device-tokens](#post-v1usersuseriddevice-tokens) | Add a device token for receiving push notifications |
+| DELETE | [/v1/users/:userId/device-tokens/:deviceTokenId](#delete-v1usersuseriddevice-tokensdevicetokenid) | Remove a device token for a user |
 
 ### `GET` /v1/info
 
@@ -238,6 +240,44 @@ As JSON:
     "checksum": "" (string) A hash of the image used for caching purposes
 }
 ```
+
+### `POST` /v1/users/:userId/device-tokens
+
+Endpoint to add a device token for a user to receive push notifications. A user can have multiple device tokens for multiple devices.
+Old device tokens will automatically be removed. Requires [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to add a device token for |
+
+#### Body
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| ios | *string* | An iOS device token |
+
+#### Returns
+
+```
+{
+    "id": "" (string) The ID of the added device token
+}
+```
+
+### `DELETE` /v1/users/:userId/device-tokens/:deviceTokenId
+
+Endpoint to remove a device token for a user. Requires [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to remove a device token for |
+| deviceTokenId | *string* | ID of the device token to remove |
 
 ### Error handling
 

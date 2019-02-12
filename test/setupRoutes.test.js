@@ -76,9 +76,23 @@ describe('setupRoutes.js', () => {
       assert(fakeServer.put.calledWithMatch('/v1/users/:id/avatar'));
     });
 
+    it('registers the route POST /v1/users/:userId/device-tokens', () => {
+      setupRoutes(fakeServer);
+
+      assert(fakeServer.post.called);
+      assert(fakeServer.post.calledWithMatch('/v1/users/:userId/device-tokens'));
+    });
+
+    it('registers the route DELETE /v1/users/:userId/device-tokens/:id', () => {
+      setupRoutes(fakeServer);
+
+      assert(fakeServer.del.called);
+      assert(fakeServer.del.calledWithMatch('/v1/users/:userId/device-tokens/:id'));
+    });
+
     it('wraps each endpoint with wrapEndpoint()', () => {
       setupRoutes(fakeServer);
-      assert.equal(wrapEndpointSpy.callCount, 7);
+      assert.equal(wrapEndpointSpy.callCount, 9);
     });
   });
 });
