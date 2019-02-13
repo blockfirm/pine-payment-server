@@ -309,7 +309,8 @@ base64('<userId>:<signature>')
 The **User ID** is a base58check-encoded hash 160 (`ripemd160(sha256(publicKey))`) of the user's public key.
 
 The **signature** is a signature of the raw request body using the user's private key
-(`secp256k1.sign(sha256(sha256(body)), privateKey).toBase64()` with recovery).
+(`secp256k1.sign(sha256(sha256(body)), privateKey).toBase64()` with recovery). If the request body is empty,
+use the user ID instead.
 
 ### Rate limiting
 

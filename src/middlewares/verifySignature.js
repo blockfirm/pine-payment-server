@@ -7,9 +7,10 @@ const verifySignature = function verifySignature(request, response, next) {
   }
 
   const { username, password } = request.authorization.basic;
+  const message = request.rawBody || username;
 
   try {
-    if (!verify(request.rawBody, password, username)) {
+    if (!verify(message, password, username)) {
       throw new Error('Verification failed');
     }
   } catch (error) {
