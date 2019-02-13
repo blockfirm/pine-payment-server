@@ -37,11 +37,11 @@ const get = function get(request, response) {
 
   return Promise.resolve().then(() => {
     const byUsername = getByUsernameParam(request.query) === '1';
-    const userId = params.id;
+    const { userId } = params;
     let promise;
 
     if (!userId || typeof userId !== 'string') {
-      throw new errors.BadRequestError('The id parameter must be a string');
+      throw new errors.BadRequestError('The userId parameter must be a string');
     }
 
     if (byUsername) {

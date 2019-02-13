@@ -103,10 +103,10 @@ for that database:
 | GET | [/v1/info](#get-v1info) | Get information about the server |
 | GET | [/v1/users](#get-v1users) | Search for users by username |
 | POST | [/v1/users](#post-v1users) | Create a new user |
-| GET | [/v1/users/:id](#get-v1usersid) | Get a user by ID |
-| PATCH | [/v1/users/:id](#patch-v1usersid) | Update a user by ID |
-| GET | [/v1/users/:id/avatar](#get-v1usersidavatar) | Get a user's profile picture |
-| PUT | [/v1/users/:id/avatar](#put-v1usersidavatar) | Change a user's profile picture |
+| GET | [/v1/users/:userId](#get-v1usersuserid) | Get a user by ID |
+| PATCH | [/v1/users/:userId](#patch-v1usersuserid) | Update a user by ID |
+| GET | [/v1/users/:userId/avatar](#get-v1usersuseridavatar) | Get a user's profile picture |
+| PUT | [/v1/users/:userId/avatar](#put-v1usersuseridavatar) | Change a user's profile picture |
 | POST | [/v1/users/:userId/device-tokens](#post-v1usersuseriddevice-tokens) | Add a device token for receiving push notifications |
 | DELETE | [/v1/users/:userId/device-tokens/:deviceTokenId](#delete-v1usersuseriddevice-tokensdevicetokenid) | Remove a device token for a user |
 
@@ -167,7 +167,7 @@ As JSON:
 
 Returns the created user as JSON.
 
-### `GET` /v1/users/:id
+### `GET` /v1/users/:userId
 
 Endpoint to get a user by ID.
 
@@ -185,7 +185,7 @@ Endpoint to get a user by ID.
 }
 ```
 
-### `PATCH` /v1/users/:id
+### `PATCH` /v1/users/:userId
 
 Endpoint to update a user by ID. Requires [authentication](#authentication).
 
@@ -201,7 +201,7 @@ As JSON:
 
 Returns the updated user as JSON.
 
-### `GET` /v1/users/:id/avatar
+### `GET` /v1/users/:userId/avatar
 
 Endpoint to get a user's profile picture.
 
@@ -209,7 +209,7 @@ Endpoint to get a user's profile picture.
 
 | Name | Type | Description |
 | --- | --- | --- |
-| id | *string* | ID of the user to get the profile picture for |
+| userId | *string* | ID of the user to get the profile picture for |
 
 #### Query String Parameters
 
@@ -221,7 +221,7 @@ Endpoint to get a user's profile picture.
 
 A 250x250px JPEG if the user has set a profile picture.
 
-### `PUT` /v1/users/:id/avatar
+### `PUT` /v1/users/:userId/avatar
 
 Endpoint to change a user's avatar. Requires [authentication](#authentication).
 

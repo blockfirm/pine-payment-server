@@ -24,11 +24,11 @@ const put = function put(request, response) {
   const params = request.params;
 
   return Promise.resolve().then(() => {
-    const userId = params.id;
+    const { userId } = params;
     const imageBase64 = params.image;
 
     if (!userId || typeof userId !== 'string') {
-      throw new errors.BadRequestError('The id parameter must be a string');
+      throw new errors.BadRequestError('The userId parameter must be a string');
     }
 
     if (!request.userId) {
@@ -43,11 +43,11 @@ const put = function put(request, response) {
       throw new errors.BadRequestError('Missing image');
     }
 
-    const query = {
+    const userQuery = {
       where: { id: userId }
     };
 
-    return this.database.user.findOne(query).then((user) => {
+    return this.database.user.findOne(userQuery).then((user) => {
       if (!user) {
         throw new errors.NotFoundError('User not found');
       }

@@ -8,7 +8,7 @@ const getById = function getById(request, response) {
 
     if (!id || typeof id !== 'string') {
       throw new errors.BadRequestError(
-        'The id parameter must be a string'
+        'The userId parameter must be a string'
       );
     }
 

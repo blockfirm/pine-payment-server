@@ -6,7 +6,7 @@ import * as deviceTokens from './users/deviceTokens';
 const endpoints = {
   '/info': info,
   '/users': users,
-  '/users/:id/avatar': avatar,
+  '/users/:userId/avatar': avatar,
   '/users/:userId/device-tokens': deviceTokens
 };
 

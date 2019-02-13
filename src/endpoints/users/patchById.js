@@ -9,7 +9,7 @@ const patchById = function patchById(request, response) {
     const displayName = cleanDisplayName(params.displayName);
 
     if (!id || typeof id !== 'string') {
-      throw new errors.BadRequestError('The id parameter must be a string');
+      throw new errors.BadRequestError('The userId parameter must be a string');
     }
 
     if (!request.userId) {
