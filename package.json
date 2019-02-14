@@ -24,7 +24,6 @@
     "create-hash": "^1.2.0",
     "jimp": "^0.6.0",
     "mysql2": "^1.6.4",
-    "redis": "^2.8.0",
     "restify": "^7.2.1",
     "restify-errors": "^6.1.1",
     "secp256k1": "^3.6.2",

@@ -44,10 +44,6 @@ const config = {
     database: 'pine_payment_server',
     username: 'pine',
     password: ''
-  },
-  redis: {
-    host: '127.0.0.1',
-    port: 6379
   }
 };
 

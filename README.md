@@ -28,7 +28,6 @@ secure and private manner.
 
 * [Node.js](https://nodejs.org) and [Restify](http://restify.com) for creating the REST API
 * [MariaDB](https://mariadb.org) or another SQL database for persistent storage
-* [Redis](https://redis.io) for caching
 
 ## Getting started
 
