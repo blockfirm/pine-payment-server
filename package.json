@@ -20,6 +20,7 @@
     "url": "https://github.com/blockfirm/pine-payment-server.git"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bs58check": "^2.1.2",
     "create-hash": "^1.2.0",
     "jimp": "^0.6.0",

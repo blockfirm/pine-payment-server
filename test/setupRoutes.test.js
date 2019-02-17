@@ -90,9 +90,16 @@ describe('setupRoutes.js', () => {
       assert(fakeServer.del.calledWithMatch('/v1/users/:userId/device-tokens/:id'));
     });
 
+    it('registers the route POST /v1/users/:userId/contact-requests', () => {
+      setupRoutes(fakeServer);
+
+      assert(fakeServer.post.called);
+      assert(fakeServer.post.calledWithMatch('/v1/users/:userId/contact-requests'));
+    });
+
     it('wraps each endpoint with wrapEndpoint()', () => {
       setupRoutes(fakeServer);
-      assert.equal(wrapEndpointSpy.callCount, 9);
+      assert.equal(wrapEndpointSpy.callCount, 10);
     });
   });
 });

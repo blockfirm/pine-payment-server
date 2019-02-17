@@ -16,6 +16,9 @@ secure and private manner.
 * [Dependencies](#dependencies)
 * [Getting started](#getting-started)
 * [Setting up the database](#setting-up-the-database)
+* [Setting up push notifications](#setting-up-push-notifications)
+  * [Send notifications to the official Pine app](#send-notifications-to-the-official-pine-app)
+  * [Send notifications to your own app](#send-notifications-to-your-own-app)
 * [API Docs](#api)
   * [Endpoints](#endpoints)
   * [Error handling](#error-handling)
@@ -93,6 +96,31 @@ for that database:
 * SQLite: `npm install sqlite3`
 * MS SQL: `npm install tedious`
 
+## Setting up push notifications
+
+There are two ways to set up push notifications; set up your own notification service with your own app,
+or send them to the official Pine app through Pine's official notification service.
+
+### Send notifications to the official Pine app
+
+**Note: This method will only work once Pine is released and has an official service to send
+notifications through.**
+
+This is the only way if you just want to host your own Pine Payment Server but still want to use the Pine app from the App Store and continue to get push notifications.
+
+1. Open `src/config.js`
+2. Make sure `notifications.webhook` is set to Pine's official Notification Service (default)
+3. Build and restart the server
+
+### Send notifications to your own app
+
+If you are running the app from source you will need to configure and host your own Notification Service in order to be able to receive push notifications.
+
+1. Go to <https://github.com/blockfirm/pine-notification-service> and follow the instructions
+1. Open `src/config.js`
+2. Set `notifications.webhook` to your own Notification Service
+3. Build and restart the server
+
 ## API
 
 ### Endpoints
@@ -108,6 +136,7 @@ for that database:
 | PUT | [/v1/users/:userId/avatar](#put-v1usersuseridavatar) | Change a user's profile picture |
 | POST | [/v1/users/:userId/device-tokens](#post-v1usersuseriddevice-tokens) | Add a device token for receiving push notifications |
 | DELETE | [/v1/users/:userId/device-tokens/:deviceTokenId](#delete-v1usersuseriddevice-tokensdevicetokenid) | Remove a device token for a user |
+| POST | [/v1/users/:userId/contact-requests](#post-v1usersuseridcontact-requests) | Send a contact request to a user |
 
 ### `GET` /v1/info
 
@@ -278,6 +307,24 @@ Endpoint to remove a device token for a user. Requires [authentication](#authent
 | userId | *string* | ID of the user to remove a device token for |
 | deviceTokenId | *string* | ID of the device token to remove |
 
+### `POST` /v1/users/:userId/contact-requests
+
+Endpoint to send a contact request to a user. Requires remote [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to send the contact request to |
+
+#### Returns
+
+```
+{
+    "id": "" (string) The ID of the created contact request
+}
+```
+
 ### Error handling
 
 Errors are returned as JSON in the following format:
@@ -298,18 +345,19 @@ the `Authorization` header to the following:
 Basic <credentials>
 ```
 
-`<credentials>` must be replaced with a base64-encoded string of the user ID and a signature of the
+`<credentials>` must be replaced with a base64-encoded string of the user ID or address and a signature of the
 raw request body:
 
 ```
-base64('<userId>:<signature>')
+base64('<userId/address>:<signature>')
 ```
 
 The **User ID** is a base58check-encoded hash 160 (`ripemd160(sha256(publicKey))`) of the user's public key.
+If authenticating as a user from another server, this should be the address of the user instead.
 
 The **signature** is a signature of the raw request body using the user's private key
 (`secp256k1.sign(sha256(sha256(body)), privateKey).toBase64()` with recovery). If the request body is empty,
-use the user ID instead.
+use the user ID or address instead.
 
 ### Rate limiting
 

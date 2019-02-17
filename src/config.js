@@ -44,6 +44,9 @@ const config = {
     database: 'pine_payment_server',
     username: 'pine',
     password: ''
+  },
+  notifications: {
+    webhook: 'http://localhost:50427/v1/notifications'
   }
 };
 
