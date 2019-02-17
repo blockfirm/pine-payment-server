@@ -59,7 +59,7 @@ const verifySignature = function verifySignature(request, _response, next) {
         request.address = username;
         next();
       })
-      .catch((error) => {
+      .catch(() => {
         next(
           new errors.InvalidCredentialsError('Authentication failed')
         );
