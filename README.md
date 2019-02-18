@@ -136,6 +136,7 @@ If you are running the app from source you will need to configure and host your 
 | PUT | [/v1/users/:userId/avatar](#put-v1usersuseridavatar) | Change a user's profile picture |
 | POST | [/v1/users/:userId/device-tokens](#post-v1usersuseriddevice-tokens) | Add a device token for receiving push notifications |
 | DELETE | [/v1/users/:userId/device-tokens/:deviceTokenId](#delete-v1usersuseriddevice-tokensdevicetokenid) | Remove a device token for a user |
+| GET | [/v1/users/:userId/contact-requests](#get-v1usersuseridcontact-requests) | Get all contact requests for a user |
 | POST | [/v1/users/:userId/contact-requests](#post-v1usersuseridcontact-requests) | Send a contact request to a user |
 
 ### `GET` /v1/info
@@ -306,6 +307,29 @@ Endpoint to remove a device token for a user. Requires [authentication](#authent
 | --- | --- | --- |
 | userId | *string* | ID of the user to remove a device token for |
 | deviceTokenId | *string* | ID of the device token to remove |
+
+### `GET` /v1/users/:userId/contact-requests
+
+Endpoint to get all contact requests for a user. Requires [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to get contact requests for |
+
+#### Returns
+
+```
+[
+    {
+        "id": "", (string) The ID of the contact request
+        "from": "" (string) Pine address of the user who sent the contact request
+        "createdAt": "" (date) When the contact request was created
+    },
+    ...
+]
+```
 
 ### `POST` /v1/users/:userId/contact-requests
 
