@@ -141,6 +141,7 @@ If you are running the app from source you will need to configure and host your 
 | DELETE | [/v1/users/:userId/contact-requests/:contactRequestId](#delete-v1usersuseridcontact-requestscontactrequestid) | Remove a contact request |
 | GET | [/v1/users/:userId/contacts](#get-v1usersuseridcontacts) | Get all contacts for a user |
 | POST | [/v1/users/:userId/contacts](#post-v1usersuseridcontacts) | Add a contact to a user |
+| DELETE | [/v1/users/:userId/contacts/:contactId](#delete-v1usersuseridcontactscontactid) | Remove a contact |
 
 ### `GET` /v1/info
 
@@ -403,6 +404,17 @@ Endpoint to add a contact to a user. Requires [authentication](#authentication).
     "id": "" (string) The ID of the created contact (not user ID)
 }
 ```
+
+### `DELETE` /v1/users/:userId/contacts/:contactId
+
+Endpoint to remove a contact. Requires [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to remove a contact for |
+| contactId | *string* | ID of the contact to remove (not user ID) |
 
 ### Error handling
 
