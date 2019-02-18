@@ -111,9 +111,16 @@ describe('setupRoutes.js', () => {
       assert(fakeServer.del.calledWithMatch('/v1/users/:userId/contact-requests/:id'));
     });
 
+    it('registers the route POST /v1/users/:userId/contacts', () => {
+      setupRoutes(fakeServer);
+
+      assert(fakeServer.post.called);
+      assert(fakeServer.post.calledWithMatch('/v1/users/:userId/contacts'));
+    });
+
     it('wraps each endpoint with wrapEndpoint()', () => {
       setupRoutes(fakeServer);
-      assert.equal(wrapEndpointSpy.callCount, 12);
+      assert.equal(wrapEndpointSpy.callCount, 13);
     });
   });
 });
