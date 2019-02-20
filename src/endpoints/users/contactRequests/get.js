@@ -1,5 +1,9 @@
 import errors from 'restify-errors';
 
+const getUnixTimestamp = (date) => {
+  return Math.floor(date.getTime() / 1000);
+};
+
 const get = function get(request, response) {
   const params = request.params;
 
@@ -27,7 +31,7 @@ const get = function get(request, response) {
         return contactRequests.map((contactRequest) => ({
           id: contactRequest.id,
           from: contactRequest.from,
-          createdAt: contactRequest.createdAt
+          createdAt: getUnixTimestamp(contactRequest.createdAt)
         }));
       })
       .then((contactRequests) => {

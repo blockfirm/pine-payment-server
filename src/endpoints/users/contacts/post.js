@@ -1,6 +1,10 @@
 import errors from 'restify-errors';
 import { parse as parseAddress } from '../../../address';
 
+const getUnixTimestamp = (date) => {
+  return Math.floor(date.getTime() / 1000);
+};
+
 const post = function post(request, response) {
   const params = request.params;
 
@@ -48,8 +52,12 @@ const post = function post(request, response) {
         defaults: newContact
       };
 
-      return this.database.contact.findOrCreate(contactQuery).spread(({ id }) => {
-        response.send({ id });
+      return this.database.contact.findOrCreate(contactQuery).spread(({ id, createdAt }) => {
+        response.send({
+          id,
+          address,
+          createdAt: getUnixTimestamp(createdAt)
+        });
       });
     });
   });
