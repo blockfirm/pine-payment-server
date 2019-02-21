@@ -448,9 +448,8 @@ base64('<userId/address>:<signature>')
 The **User ID** is a base58check-encoded hash 160 (`ripemd160(sha256(publicKey))`) of the user's public key.
 If authenticating as a user from another server, this should be the address of the user instead.
 
-The **signature** is a signature of the raw request body using the user's private key
-(`secp256k1.sign(sha256(sha256(body)), privateKey).toBase64()` with recovery). If the request body is empty,
-use the user ID or address instead.
+The **signature** is a signature of the request path and the raw request body using the user's private key
+(`secp256k1.sign(sha256(sha256(path + body)), privateKey).toBase64()` with recovery).
 
 ### Rate limiting
 

@@ -51,7 +51,7 @@ const verifySignature = function verifySignature(request, _response, next) {
   }
 
   const { username, password } = request.authorization.basic;
-  const message = request.rawBody || username;
+  const message = request.href() + (request.rawBody || '');
 
   if (username.indexOf('@') > -1) {
     return verifyExternalUser(username, message, password)
