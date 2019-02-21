@@ -349,7 +349,9 @@ Endpoint to send a contact request to a user. Requires remote [authentication](#
 
 ```
 {
-    "id": "" (string) The ID of the created contact request
+    "id": "", (string) The ID of the created contact request
+    "from": "", (string) Pine address of the user who sent the contact request
+    "createdAt": 1550706061 (integer) When the contact request was created (unix timestamp)
 }
 ```
 
@@ -380,7 +382,7 @@ Endpoint to get all contacts for a user. Requires [authentication](#authenticati
 [
     {
         "id": "", (string) The ID of the contact (not user ID)
-        "address": "" (string) Pine address of the contact
+        "address": "", (string) Pine address of the contact
         "createdAt": 1550706061 (integer) When the contact was added (unix timestamp)
     },
     ...

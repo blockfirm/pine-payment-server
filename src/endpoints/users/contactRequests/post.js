@@ -1,5 +1,9 @@
 import errors from 'restify-errors';
 
+const getUnixTimestamp = (date) => {
+  return Math.floor(date.getTime() / 1000);
+};
+
 const post = function post(request, response) {
   const params = request.params;
 
@@ -33,14 +37,18 @@ const post = function post(request, response) {
         defaults: newContactRequest
       };
 
-      return this.database.contactRequest.findOrCreate(contactRequestQuery).spread(({ id }, created) => {
+      return this.database.contactRequest.findOrCreate(contactRequestQuery).spread((createdContactRequest, created) => {
         if (created) {
           this.notifications.notify(userId, 'contactRequest', {
             address: request.address
           });
         }
 
-        response.send({ id });
+        response.send({
+          id: createdContactRequest.id,
+          from: createdContactRequest.from,
+          createdAt: getUnixTimestamp(createdContactRequest.createdAt)
+        });
       });
     });
   });
