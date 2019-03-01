@@ -22,35 +22,47 @@ const post = function post(request, response) {
       where: { id: userId }
     };
 
-    return this.database.user.findOne(userQuery).then((user) => {
-      if (!user) {
-        throw new errors.NotFoundError('User not found');
-      }
-
-      const newContactRequest = {
-        from: request.address,
-        userId
-      };
-
-      const contactRequestQuery = {
-        where: newContactRequest,
-        defaults: newContactRequest
-      };
-
-      return this.database.contactRequest.findOrCreate(contactRequestQuery).spread((createdContactRequest, created) => {
-        if (created) {
-          this.notifications.notify(userId, 'contactRequest', {
-            address: request.address
-          });
+    return this.database.user.findOne(userQuery)
+      .then((user) => {
+        if (!user) {
+          throw new errors.NotFoundError('User not found');
         }
 
-        response.send({
-          id: createdContactRequest.id,
-          from: createdContactRequest.from,
-          createdAt: getUnixTimestamp(createdContactRequest.createdAt)
+        const contactQuery = {
+          where: { address: request.address, userId }
+        };
+
+        return this.database.contact.findOne(contactQuery);
+      })
+      .then((contact) => {
+        if (contact) {
+          throw new errors.ConflictError('User already has you as a contact');
+        }
+
+        const newContactRequest = {
+          from: request.address,
+          userId
+        };
+
+        const contactRequestQuery = {
+          where: newContactRequest,
+          defaults: newContactRequest
+        };
+
+        return this.database.contactRequest.findOrCreate(contactRequestQuery).spread((createdContactRequest, created) => {
+          if (created) {
+            this.notifications.notify(userId, 'contactRequest', {
+              address: request.address
+            });
+          }
+
+          response.send({
+            id: createdContactRequest.id,
+            from: createdContactRequest.from,
+            createdAt: getUnixTimestamp(createdContactRequest.createdAt)
+          });
         });
       });
-    });
   });
 };
 
