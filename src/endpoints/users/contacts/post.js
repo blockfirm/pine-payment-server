@@ -53,10 +53,12 @@ const post = function post(request, response) {
       };
 
       return this.database.contact.findOrCreate(contactQuery).spread(({ id, createdAt }) => {
-        response.send({
-          id,
-          address,
-          createdAt: getUnixTimestamp(createdAt)
+        return this.database.contactRequest.destroy({ where: { from: address, userId } }).then(() => {
+          response.send({
+            id,
+            address,
+            createdAt: getUnixTimestamp(createdAt)
+          });
         });
       });
     });
