@@ -399,6 +399,14 @@ Endpoint to add a contact to a user. Requires [authentication](#authentication).
 | --- | --- | --- |
 | userId | *string* | ID of the user to add the contact to |
 
+#### Body
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| address | *string* | Pine address of the contact to add |
+
 #### Returns
 
 ```
