@@ -31,6 +31,7 @@ const get = function get(request, response) {
         return contacts.map((contact) => ({
           id: contact.id,
           address: contact.address,
+          waitingForContactRequest: contact.waitingForContactRequest,
           createdAt: getUnixTimestamp(contact.createdAt)
         }));
       })

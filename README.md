@@ -383,6 +383,7 @@ Endpoint to get all contacts for a user. Requires [authentication](#authenticati
     {
         "id": "", (string) The ID of the contact (not user ID)
         "address": "", (string) Pine address of the contact
+        "waitingForContactRequest": false, (boolean) Whether or not the user is waiting for the contact to accept a contact request
         "createdAt": 1550706061 (integer) When the contact was added (unix timestamp)
     },
     ...
@@ -406,6 +407,7 @@ As JSON:
 | Name | Type | Description |
 | --- | --- | --- |
 | address | *string* | Pine address of the contact to add |
+| waitingForContactRequest | *boolean* | Whether or not the user is waiting for the contact to accept a contact request (*optional*) |
 
 #### Returns
 

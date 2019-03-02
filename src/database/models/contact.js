@@ -9,5 +9,9 @@ export default {
   address: {
     type: Sequelize.STRING,
     allowNull: false
+  },
+  waitingForContactRequest: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   }
 };
