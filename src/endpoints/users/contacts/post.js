@@ -5,6 +5,33 @@ const getUnixTimestamp = (date) => {
   return Math.floor(date.getTime() / 1000);
 };
 
+const createContact = (contact, database) => {
+  const { address, userId } = contact;
+
+  return database.sequelize.transaction((transaction) => {
+    const contactQuery = {
+      where: contact,
+      defaults: contact,
+      transaction
+    };
+
+    return database.contact.findOrCreate(contactQuery).spread(({ id, createdAt }) => {
+      const contactRequestQuery = {
+        where: { from: address, userId },
+        transaction
+      };
+
+      return database.contactRequest.destroy(contactRequestQuery).then(() => {
+        return {
+          id,
+          address,
+          createdAt: getUnixTimestamp(createdAt)
+        };
+      });
+    });
+  });
+};
+
 const post = function post(request, response) {
   const params = request.params;
 
@@ -37,31 +64,22 @@ const post = function post(request, response) {
       where: { id: userId }
     };
 
-    return this.database.user.findOne(userQuery).then((user) => {
-      if (!user) {
-        throw new errors.NotFoundError('User not found');
-      }
+    return this.database.user.findOne(userQuery)
+      .then((user) => {
+        if (!user) {
+          throw new errors.NotFoundError('User not found');
+        }
 
-      const newContact = {
-        address,
-        userId
-      };
+        const newContact = {
+          address,
+          userId
+        };
 
-      const contactQuery = {
-        where: newContact,
-        defaults: newContact
-      };
-
-      return this.database.contact.findOrCreate(contactQuery).spread(({ id, createdAt }) => {
-        return this.database.contactRequest.destroy({ where: { from: address, userId } }).then(() => {
-          response.send({
-            id,
-            address,
-            createdAt: getUnixTimestamp(createdAt)
-          });
-        });
+        return createContact(newContact, this.database);
+      })
+      .then((contact) => {
+        response.send(contact);
       });
-    });
   });
 };
 
