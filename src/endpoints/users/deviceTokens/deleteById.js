@@ -27,7 +27,7 @@ const deleteById = function deleteById(request, response) {
     };
 
     return this.database.deviceToken.destroy(deviceTokenQuery).then(() => {
-      response.send(200);
+      response.send(204);
     });
   });
 };

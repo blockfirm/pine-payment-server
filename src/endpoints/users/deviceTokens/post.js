@@ -49,8 +49,9 @@ const post = function post(request, response) {
         defaults: newDeviceToken
       };
 
-      return this.database.deviceToken.findOrCreate(deviceTokenQuery).spread(({ id }) => {
-        response.send({ id });
+      return this.database.deviceToken.findOrCreate(deviceTokenQuery).spread(({ id }, created) => {
+        const status = created ? 201 : 200;
+        response.send(status, { id });
       });
     });
   });

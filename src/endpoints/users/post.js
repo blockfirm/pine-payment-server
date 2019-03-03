@@ -63,7 +63,7 @@ const post = function post(request, response) {
       });
     })
     .then(() => {
-      response.send(user);
+      response.send(201, user);
     });
 };
 

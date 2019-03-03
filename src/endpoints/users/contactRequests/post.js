@@ -32,9 +32,8 @@ const createContactRequest = (contactRequest, database, notifications) => {
     }
 
     return {
-      id: createdContactRequest.id,
-      from: createdContactRequest.from,
-      createdAt: getUnixTimestamp(createdContactRequest.createdAt)
+      contactRequest: createdContactRequest,
+      created
     };
   });
 };
@@ -79,9 +78,16 @@ const post = function post(request, response) {
         };
 
         if (!contact) {
-          return createContactRequest(newContactRequest, this.database, this.notifications).then((contactRequest) => {
-            response.send(201, contactRequest);
-          });
+          return createContactRequest(newContactRequest, this.database, this.notifications)
+            .then(({ contactRequest, created }) => {
+              const status = created ? 201 : 200;
+
+              response.send(status, {
+                id: contactRequest.id,
+                from: contactRequest.from,
+                createdAt: getUnixTimestamp(contactRequest.createdAt)
+              });
+            });
         }
 
         if (contact.waitingForContactRequest) {

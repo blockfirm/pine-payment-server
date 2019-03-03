@@ -36,7 +36,7 @@ const deleteById = function deleteById(request, response) {
       }
 
       return this.database.contactRequest.destroy(contactRequestQuery).then(() => {
-        response.send(200);
+        response.send(204);
       });
     });
   });

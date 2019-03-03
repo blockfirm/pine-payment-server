@@ -91,7 +91,7 @@ const post = function post(request, response) {
         return createContact(newContact, this.database);
       })
       .then((contact) => {
-        response.send(contact);
+        response.send(201, contact);
       });
   });
 };
