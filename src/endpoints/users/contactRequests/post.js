@@ -4,19 +4,57 @@ const getUnixTimestamp = (date) => {
   return Math.floor(date.getTime() / 1000);
 };
 
+const validateRequest = (request) => {
+  const { userId } = request.params;
+
+  if (!userId || typeof userId !== 'string') {
+    throw new errors.BadRequestError('The userId parameter must be a string');
+  }
+
+  if (!request.address) {
+    throw new errors.UnauthorizedError('Cannot create contact request without authentication');
+  }
+
+  return true;
+};
+
+const createContactRequest = (contactRequest, database, notifications) => {
+  const contactRequestQuery = {
+    where: contactRequest,
+    defaults: contactRequest
+  };
+
+  return database.contactRequest.findOrCreate(contactRequestQuery).spread((createdContactRequest, created) => {
+    if (created) {
+      notifications.notify(contactRequest.userId, 'contactRequest', {
+        address: contactRequest.from
+      });
+    }
+
+    return {
+      id: createdContactRequest.id,
+      from: createdContactRequest.from,
+      createdAt: getUnixTimestamp(createdContactRequest.createdAt)
+    };
+  });
+};
+
+const acceptImmediately = (contact, contactRequest, notifications) => {
+  contact.waitingForContactRequest = false;
+
+  return contact.save({ fields: ['waitingForContactRequest'] })
+    .then(() => {
+      notifications.notify(contactRequest.userId, 'contactRequestAccepted', {
+        address: contactRequest.from
+      });
+    });
+};
+
 const post = function post(request, response) {
-  const params = request.params;
-
   return Promise.resolve().then(() => {
-    const { userId } = params;
+    const { userId } = request.params;
 
-    if (!userId || typeof userId !== 'string') {
-      throw new errors.BadRequestError('The userId parameter must be a string');
-    }
-
-    if (!request.address) {
-      throw new errors.UnauthorizedError('Cannot create contact request without authentication');
-    }
+    validateRequest(request);
 
     const userQuery = {
       where: { id: userId }
@@ -35,33 +73,24 @@ const post = function post(request, response) {
         return this.database.contact.findOne(contactQuery);
       })
       .then((contact) => {
-        if (contact) {
-          throw new errors.ConflictError('User already has you as a contact');
-        }
-
         const newContactRequest = {
           from: request.address,
           userId
         };
 
-        const contactRequestQuery = {
-          where: newContactRequest,
-          defaults: newContactRequest
-        };
-
-        return this.database.contactRequest.findOrCreate(contactRequestQuery).spread((createdContactRequest, created) => {
-          if (created) {
-            this.notifications.notify(userId, 'contactRequest', {
-              address: request.address
-            });
-          }
-
-          response.send({
-            id: createdContactRequest.id,
-            from: createdContactRequest.from,
-            createdAt: getUnixTimestamp(createdContactRequest.createdAt)
+        if (!contact) {
+          return createContactRequest(newContactRequest, this.database, this.notifications).then((contactRequest) => {
+            response.send(201, contactRequest);
           });
-        });
+        }
+
+        if (contact.waitingForContactRequest) {
+          return acceptImmediately(contact, newContactRequest, this.notifications).then(() => {
+            response.send(202);
+          });
+        }
+
+        throw new errors.ConflictError('User already has you as a contact');
       });
   });
 };

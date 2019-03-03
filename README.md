@@ -347,6 +347,10 @@ Endpoint to send a contact request to a user. Requires external [authentication]
 
 #### Returns
 
+**If the contact request was created:**
+
+`201 Created`
+
 ```
 {
     "id": "", (string) The ID of the created contact request
@@ -354,6 +358,13 @@ Endpoint to send a contact request to a user. Requires external [authentication]
     "createdAt": 1550706061 (integer) When the contact request was created (unix timestamp)
 }
 ```
+
+**If the contact request was accepted immediately:**
+
+`202 Accepted`
+
+*Contact requests can be accepted immediately if the receiving user is waiting for an incoming
+contact request due to a sent contact request to the other party.*
 
 ### `DELETE` /v1/users/:userId/contact-requests/:contactRequestId
 
