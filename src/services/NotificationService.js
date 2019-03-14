@@ -48,7 +48,7 @@ export default class NotificationService {
       if (status >= 400 && status < 500) {
         console.log(`[NOTIFICATIONS] Unsubscribing (${reason}):`, result.device);
 
-        return this.database.deviceToken.destroy({ ios: result.device }).catch((error) => {
+        return this.database.deviceToken.destroy({ where: { ios: result.device } }).catch((error) => {
           console.error('[NOTIFICATIONS] 🔥 Error unsubscribing:', error.message);
         });
       }
