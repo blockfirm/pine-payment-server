@@ -2,6 +2,8 @@ import bs58check from 'bs58check';
 import Sequelize from 'sequelize';
 import errors from 'restify-errors';
 
+import generateAvatar from '../../avatar/generate';
+import sha256 from '../../crypto/sha256';
 import getUserIdFromPublicKey from '../../crypto/getUserIdFromPublicKey';
 import cleanDisplayName from '../../cleaners/cleanDisplayName';
 
@@ -61,6 +63,29 @@ const post = function post(request, response) {
       return this.database.user.create(user).catch((error) => {
         throw new errors.BadRequestError(error.message);
       });
+    })
+    .then(() => {
+      // Generate a placeholder avatar.
+      return generateAvatar(id)
+        .then((image) => {
+          const checksum = sha256(image).toString('base64');
+
+          const avatar = {
+            userId: id,
+            image,
+            checksum
+          };
+
+          return this.database.avatar.create(avatar).then(() => {
+            user.avatar = { checksum };
+          });
+        })
+        .catch(() => {
+          /**
+           * Suppress error. The user has been created anyhow
+           * so don't let an avatar make the API call fail.
+           */
+        });
     })
     .then(() => {
       response.send(201, user);
