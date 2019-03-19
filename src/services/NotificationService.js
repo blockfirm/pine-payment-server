@@ -1,9 +1,16 @@
+import Queue from 'bull';
 import axios from 'axios';
 
 export default class NotificationService {
   constructor(config, database) {
     this.config = config;
     this.database = database;
+
+    this._queue = new Queue('notifications', {
+      redis: config.redis
+    });
+
+    this._processJobs();
   }
 
   notify(userId, type, context) {
@@ -13,10 +20,19 @@ export default class NotificationService {
 
     return this.database.deviceToken.findAll(query).then((deviceTokens) => {
       deviceTokens.forEach((deviceToken) => {
-        if (deviceToken.ios) {
-          this._sendWithWebhook(deviceToken.ios, type, context).then(this._handleUnsubscribe.bind(this));
+        if (!deviceToken.ios) {
+          return;
         }
+
+        this._queue.add({ deviceToken, type, context }, this.config.notifications.queue);
       });
+    });
+  }
+
+  _processJobs() {
+    this._queue.process((job) => {
+      const { deviceToken, type, context } = job.data;
+      return this._sendWithWebhook(deviceToken.ios, type, context).then(this._handleUnsubscribe.bind(this));
     });
   }
 
@@ -29,6 +45,7 @@ export default class NotificationService {
       })
       .catch((error) => {
         console.error('[NOTIFICATIONS] 🔥 Error calling webhook:', error.message);
+        throw error;
       });
   }
 

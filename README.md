@@ -31,6 +31,7 @@ secure and private manner.
 
 * [Node.js](https://nodejs.org) and [Restify](http://restify.com) for creating the REST API
 * [MariaDB](https://mariadb.org) or another SQL database for persistent storage
+* [Redis](https://redis.io) for queuing notifications
 
 ## Getting started
 
@@ -44,6 +45,7 @@ secure and private manner.
     $ npm install
     ```
 3. Install a database by following the steps in [Setting up the database](#setting-up-the-database)
+4. Install [Redis](https://redis.io)
 5. Start the server in development mode:
     ```
     $ npm run dev
