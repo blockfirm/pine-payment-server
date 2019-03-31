@@ -15,13 +15,14 @@ const verifyPublicKey = (publicKey, userId) => {
 };
 
 const post = function post(request, response) {
-  const { publicKey, username } = request.params;
+  const { publicKey, extendedPublicKey, username } = request.params;
   const displayName = cleanDisplayName(request.params.displayName);
   const id = request.userId;
 
   const user = {
     id,
     publicKey,
+    extendedPublicKey,
     username,
     displayName
   };
@@ -80,11 +81,12 @@ const post = function post(request, response) {
             user.avatar = { checksum };
           });
         })
-        .catch(() => {
+        .catch((error) => {
           /**
            * Suppress error. The user has been created anyhow
            * so don't let an avatar make the API call fail.
            */
+          console.error('Error generating avatar:', error);
         });
     })
     .then(() => {

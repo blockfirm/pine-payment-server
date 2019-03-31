@@ -194,7 +194,8 @@ As JSON:
 
 | Name | Type | Description |
 | --- | --- | --- |
-| publicKey | *string* | A public key encoded as base58check. Must match the authenticated user |
+| publicKey | *string* | A public key encoded as base58check. Used for verifying users and encrypting messages. Must match the authenticated user |
+| extendedPublicKey | *string* | An extended public key encoded as base58check. Used for generating new bitcoin addresses on behalf of the user |
 | username | *string* | Username of the user. Lowercase `a-z`, `0-9`, `_`, and `.`. Maximum 20 characters |
 | displayName | *string* | Optional display name of the user. Maximum 50 characters |
 

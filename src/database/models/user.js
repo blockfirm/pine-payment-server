@@ -20,6 +20,19 @@ export default {
       }
     }
   },
+  extendedPublicKey: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      isBase58check(extendedPublicKey) {
+        try {
+          bs58check.decode(extendedPublicKey);
+        } catch (error) {
+          throw new Error('Extended public key must be base58check encoded');
+        }
+      }
+    }
+  },
   username: {
     type: Sequelize.STRING,
     unique: true,
