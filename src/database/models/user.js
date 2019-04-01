@@ -76,5 +76,32 @@ export default {
         }
       }
     }
+  },
+
+  /**
+   * Address Index is the current BIP44 index with the next unused address.
+   */
+  addressIndex: {
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false,
+    defaultValue: 0
+  },
+
+  /**
+   * Address Index Offset is the offset of released addresses since addressIndex was last updated.
+   * This should never exceed 19 as that might break the address discovery gap limit. Instead it
+   * should rotate when reaching 19.
+   */
+  addressIndexOffset: {
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false,
+    defaultValue: 0,
+    validate: {
+      isBelow20(addressIndexOffset) {
+        if (addressIndexOffset > 19) {
+          throw new Error('Address Index Offset must be a number between 0 and 19');
+        }
+      }
+    }
   }
 };

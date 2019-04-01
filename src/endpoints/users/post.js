@@ -15,7 +15,7 @@ const verifyPublicKey = (publicKey, userId) => {
 };
 
 const post = function post(request, response) {
-  const { publicKey, extendedPublicKey, username } = request.params;
+  const { publicKey, extendedPublicKey, username, addressIndex } = request.params;
   const displayName = cleanDisplayName(request.params.displayName);
   const id = request.userId;
 
@@ -24,7 +24,8 @@ const post = function post(request, response) {
     publicKey,
     extendedPublicKey,
     username,
-    displayName
+    displayName,
+    addressIndex
   };
 
   const query = {

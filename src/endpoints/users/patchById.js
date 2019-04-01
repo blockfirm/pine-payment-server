@@ -5,7 +5,7 @@ const patchById = function patchById(request, response) {
   const params = request.params;
 
   return Promise.resolve().then(() => {
-    const id = params.id;
+    const { id, addressIndex } = params;
     const displayName = cleanDisplayName(params.displayName);
 
     if (!id || typeof id !== 'string') {
@@ -20,7 +20,7 @@ const patchById = function patchById(request, response) {
       throw new errors.UnauthorizedError('The authenticated user is not authorized to update this user');
     }
 
-    if (displayName === undefined) {
+    if (displayName === undefined && addressIndex === undefined) {
       throw new errors.BadRequestError('Nothing to update');
     }
 
@@ -29,13 +29,23 @@ const patchById = function patchById(request, response) {
     };
 
     return this.database.user.findOne(query).then((user) => {
+      const fieldsToUpdate = [];
+
       if (!user) {
         throw new errors.NotFoundError('User not found');
       }
 
-      user.displayName = displayName;
+      if (displayName !== undefined) {
+        user.displayName = displayName;
+        fieldsToUpdate.push('displayName');
+      }
 
-      return user.save({ fields: ['displayName'] }).then(() => {
+      if (addressIndex !== undefined) {
+        user.addressIndex = addressIndex;
+        fieldsToUpdate.push('addressIndex');
+      }
+
+      return user.save({ fields: fieldsToUpdate }).then(() => {
         response.send({
           id: user.id,
           publicKey: user.publicKey,
