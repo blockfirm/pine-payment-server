@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "bip32": "^2.0.1",
+    "bitcoinjs-lib": "^4.0.3",
     "bs58check": "^2.1.2",
     "bull": "^3.7.0",
     "convert-svg-to-png": "^0.5.0",

@@ -55,6 +55,9 @@ const config = {
       attempts: 10,
       backoff: 60000 // Wait 1m before next attempt.
     }
+  },
+  bitcoin: {
+    network: 'testnet' // 'mainnet' or 'testnet'
   }
 };
 

@@ -1,6 +1,14 @@
 import errors from 'restify-errors';
 import cleanDisplayName from '../../cleaners/cleanDisplayName';
 
+const getNewAddressIndexOffset = (newAddressIndex, oldAddressIndex, oldAddressIndexOffset) => {
+  if (newAddressIndex < oldAddressIndex + oldAddressIndexOffset) {
+    return oldAddressIndex + oldAddressIndexOffset - newAddressIndex;
+  }
+
+  return 0;
+};
+
 const patchById = function patchById(request, response) {
   const params = request.params;
 
@@ -41,8 +49,16 @@ const patchById = function patchById(request, response) {
       }
 
       if (addressIndex !== undefined) {
+        user.addressIndexOffset = getNewAddressIndexOffset(
+          addressIndex,
+          user.addressIndex,
+          user.addressIndexOffset
+        );
+
         user.addressIndex = addressIndex;
+
         fieldsToUpdate.push('addressIndex');
+        fieldsToUpdate.push('addressIndexOffset');
       }
 
       return user.save({ fields: fieldsToUpdate }).then(() => {

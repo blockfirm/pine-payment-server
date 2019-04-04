@@ -144,6 +144,7 @@ If you are running the app from source you will need to configure and host your 
 | GET | [/v1/users/:userId/contacts](#get-v1usersuseridcontacts) | Get all contacts for a user |
 | POST | [/v1/users/:userId/contacts](#post-v1usersuseridcontacts) | Add a contact to a user |
 | DELETE | [/v1/users/:userId/contacts/:contactId](#delete-v1usersuseridcontactscontactid) | Remove a contact |
+| GET | [/v1/users/:userId/address](#get-v1usersuseridaddress) | Get a bitcoin address for a user |
 
 ### `GET` /v1/info
 
@@ -443,6 +444,24 @@ Endpoint to remove a contact. Requires [authentication](#authentication).
 | --- | --- | --- |
 | userId | *string* | ID of the user to remove a contact for |
 | contactId | *string* | ID of the contact to remove (not user ID) |
+
+### `GET` /v1/users/:userId/address
+
+Endpoint to get a bitcoin address for a user. Requires external [authentication](#authentication) and that the user has the authenticated user as a contact.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to get a bitcoin address for |
+
+#### Returns
+
+```
+{
+    "address": "" (string) A bitcoin address (`P2SH(P2WSH)`)
+}
+```
 
 ### Error handling
 

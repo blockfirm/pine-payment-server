@@ -7,6 +7,13 @@ export default {
     type: Sequelize.STRING,
     primaryKey: true
   },
+
+  /**
+   * The Public Key is derived from the user's mnemonic but can't be used to
+   * generate any addresses or link any bitcoin transactions or addresses to
+   * the user. It is public and can only used for encrypting and verifying
+   * messages to and from the user.
+   */
   publicKey: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -20,6 +27,12 @@ export default {
       }
     }
   },
+
+  /**
+   * The Extended Public Key is an extended public key for a BIP32 account
+   * and is used to generate new bitcoin addresses on behalf of the user.
+   * It is never exposed or shared with anyone.
+   */
   extendedPublicKey: {
     type: Sequelize.STRING,
     allowNull: false,
