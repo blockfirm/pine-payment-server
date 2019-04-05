@@ -145,6 +145,7 @@ If you are running the app from source you will need to configure and host your 
 | POST | [/v1/users/:userId/contacts](#post-v1usersuseridcontacts) | Add a contact to a user |
 | DELETE | [/v1/users/:userId/contacts/:contactId](#delete-v1usersuseridcontactscontactid) | Remove a contact |
 | GET | [/v1/users/:userId/address](#get-v1usersuseridaddress) | Get a bitcoin address for a user |
+| POST | [/v1/users/:userId/address/used](#get-v1usersuseridaddressused) | Flag addresses as used |
 
 ### `GET` /v1/info
 
@@ -462,6 +463,29 @@ Endpoint to get a bitcoin address for a user. Requires external [authentication]
     "address": "" (string) A bitcoin address (`P2SH(P2WSH)`)
 }
 ```
+
+### `POST` /v1/users/:userId/address/used
+
+Endpoint to flag bitcoin addresses as used. Used to tell the server that an address has been used in a transaction
+so that it can release it for contacts who has allocated it. Requires [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user that the addresses belong to |
+
+#### Body
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| addresses | *array* | An array of bitcoin addresses (strings) |
+
+#### Returns
+
+200 OK
 
 ### Error handling
 
