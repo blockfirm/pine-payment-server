@@ -148,6 +148,7 @@ If you are running the app from source you will need to configure and host your 
 | POST | [/v1/users/:userId/address/used](#post-v1usersuseridaddressused) | Flag addresses as used |
 | GET | [/v1/users/:userId/messages](#get-v1usersuseridmessages) | Get all incoming messages for a user |
 | POST | [/v1/users/:userId/messages](#post-v1usersuseridmessages) | Send a message to a user |
+| DELETE | [/v1/users/:userId/messages/:messageId](#delete-v1usersuseridmessagesmessageid) | Remove a message |
 
 ### `GET` /v1/info
 
@@ -557,6 +558,17 @@ The message is end-to-end encrypted using [Elliptic Curve Integrated Encryption]
 #### Returns
 
 201 Created
+
+### `DELETE` /v1/users/:userId/messages/:messageId
+
+Endpoint to remove a message. Requires [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to remove a message for |
+| messageId | *string* | ID of the message to remove |
 
 ### Error handling
 
