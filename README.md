@@ -145,7 +145,8 @@ If you are running the app from source you will need to configure and host your 
 | POST | [/v1/users/:userId/contacts](#post-v1usersuseridcontacts) | Add a contact to a user |
 | DELETE | [/v1/users/:userId/contacts/:contactId](#delete-v1usersuseridcontactscontactid) | Remove a contact |
 | GET | [/v1/users/:userId/address](#get-v1usersuseridaddress) | Get a bitcoin address for a user |
-| POST | [/v1/users/:userId/address/used](#get-v1usersuseridaddressused) | Flag addresses as used |
+| POST | [/v1/users/:userId/address/used](#post-v1usersuseridaddressused) | Flag addresses as used |
+| POST | [/v1/users/:userId/messages](#post-v1usersuseridmessages) | Send a message to a user |
 
 ### `GET` /v1/info
 
@@ -486,6 +487,50 @@ As JSON:
 #### Returns
 
 200 OK
+
+### `POST` /v1/users/:userId/messages
+
+Endpoint to send a message (a payment) to a user. Requires external [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to send the message to |
+
+#### Body
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| encryptedMessage | *string* | Base64-encoded JSON string of an ECIES object/structure (see below) encrypted with the recipient's public key |
+| signature | *string* | A signature of the `encryptedMessage` field signed by the sender (`secp256k1.sign(sha256(sha256(encryptedMessage)), senderPrivateKey).toBase64()` with recovery) |
+
+**ECIES Structure**
+
+The message is end-to-end encrypted using [Elliptic Curve Integrated Encryption](https://www.cryptopp.com/wiki/Elliptic_Curve_Integrated_Encryption_Scheme) (ECIES) with the same curve as bitcoin uses (`secp256k1`).
+
+| Name | Type | Description |
+| --- | --- | --- |
+| iv | *string* | Initialization vector serialized as hex (16 bytes) |
+| ephemPublicKey | *string* | Ephemeral public key serialized as hex (65 bytes) |
+| ciphertext | *string* | Encrypted JSON string of a Message object/structure (see below) serialized as hex |
+| mac | *string* | Message authentication code serialized as hex (32 bytes) |
+
+**Message Structure**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| version | *integer* | `1` |
+| type | *string* | Only `'payment'` at the moment |
+| data | *object* | Additional data attached to the message |
+| data.transaction | *string* | A signed bitcoin transaction serialized in raw format (https://bitcoin.org/en/developer-reference#raw-transaction-format) |
+| data.network | *string* | `'bitcoin_mainnet'` or `'bitcoin_testnet'` |
+
+#### Returns
+
+201 Created
 
 ### Error handling
 

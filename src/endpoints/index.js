@@ -6,6 +6,7 @@ import * as usersContactRequests from './users/contactRequests';
 import * as usersContacts from './users/contacts';
 import * as usersAddress from './users/address';
 import * as usersAddressUsed from './users/address/used';
+import * as usersMessages from './users/messages';
 
 const endpoints = {
   '/info': info,
@@ -15,7 +16,8 @@ const endpoints = {
   '/users/:userId/contact-requests': usersContactRequests,
   '/users/:userId/contacts': usersContacts,
   '/users/:userId/address': usersAddress,
-  '/users/:userId/address/used': usersAddressUsed
+  '/users/:userId/address/used': usersAddressUsed,
+  '/users/:userId/messages': usersMessages
 };
 
 export default endpoints;

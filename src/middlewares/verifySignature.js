@@ -42,6 +42,8 @@ const verifyExternalUser = (address, message, signature) => {
     if (!verify(message, signature, user.id)) {
       throw new Error('Verification failed');
     }
+
+    return user;
   });
 };
 
@@ -55,8 +57,9 @@ const verifySignature = function verifySignature(request, _response, next) {
 
   if (username.indexOf('@') > -1) {
     return verifyExternalUser(username, message, password)
-      .then(() => {
+      .then((user) => {
         request.address = username;
+        request.externalUserId = user.id;
         next();
       })
       .catch(() => {
