@@ -153,9 +153,16 @@ describe('setupRoutes.js', () => {
       assert(fakeServer.post.calledWithMatch('/v1/users/:userId/messages'));
     });
 
+    it('registers the route GET /v1/users/:userId/messages', () => {
+      setupRoutes(fakeServer);
+
+      assert(fakeServer.get.called);
+      assert(fakeServer.get.calledWithMatch('/v1/users/:userId/messages'));
+    });
+
     it('wraps each endpoint with wrapEndpoint()', () => {
       setupRoutes(fakeServer);
-      assert.equal(wrapEndpointSpy.callCount, 18);
+      assert.equal(wrapEndpointSpy.callCount, 19);
     });
   });
 });

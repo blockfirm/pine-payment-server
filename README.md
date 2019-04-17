@@ -146,6 +146,7 @@ If you are running the app from source you will need to configure and host your 
 | DELETE | [/v1/users/:userId/contacts/:contactId](#delete-v1usersuseridcontactscontactid) | Remove a contact |
 | GET | [/v1/users/:userId/address](#get-v1usersuseridaddress) | Get a bitcoin address for a user |
 | POST | [/v1/users/:userId/address/used](#post-v1usersuseridaddressused) | Flag addresses as used |
+| GET | [/v1/users/:userId/messages](#get-v1usersuseridmessages) | Get all incoming messages for a user |
 | POST | [/v1/users/:userId/messages](#post-v1usersuseridmessages) | Send a message to a user |
 
 ### `GET` /v1/info
@@ -487,6 +488,31 @@ As JSON:
 #### Returns
 
 200 OK
+
+### `GET` /v1/users/:userId/messages
+
+Endpoint to get all incoming messages (payments) for a user. Requires [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to get messages for |
+
+#### Returns
+
+```
+[
+    {
+        "id": "", (string) The ID of the message
+        "from": "", (string) Pine address of the sender
+        "encryptedMessage": "", (string) The encrypted message (see below for details)
+        "signature": "", (string) A signature of the encrypted message signed by the sender (see below for details)
+        "createdAt": 1550706061 (integer) When the message was sent (unix timestamp)
+    },
+    ...
+]
+```
 
 ### `POST` /v1/users/:userId/messages
 

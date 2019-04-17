@@ -35,8 +35,8 @@ const get = function get(request, response) {
           createdAt: getUnixTimestamp(contact.createdAt)
         }));
       })
-      .then((contact) => {
-        response.send(contact);
+      .then((contacts) => {
+        response.send(contacts);
       });
   });
 };
