@@ -32,7 +32,7 @@
     "restify": "^7.2.1",
     "restify-errors": "^6.1.1",
     "secp256k1": "^3.6.2",
-    "sequelize": "^4.42.0"
+    "sequelize": "^5.7.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",

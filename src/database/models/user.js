@@ -84,7 +84,7 @@ export default {
     type: Sequelize.STRING,
     validate: {
       isNotTooLong(displayName) {
-        if (displayName.length > 50) {
+        if (displayName && displayName.length > 50) {
           throw new Error('Display name is too long');
         }
       }
