@@ -11,7 +11,8 @@ export default {
     allowNull: false
   },
   encryptedMessage: {
-    type: Sequelize.STRING,
+    // eslint-disable-next-line new-cap
+    type: Sequelize.STRING(4096),
     allowNull: false
   },
   signature: {
