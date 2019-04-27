@@ -68,7 +68,8 @@ const post = function post(request, response) {
   const params = request.params;
 
   return Promise.resolve().then(() => {
-    const { userId, address, waitingForContactRequest } = params;
+    const { userId, address } = params;
+    const waitingForContactRequest = Boolean(params.waitingForContactRequest);
 
     validateRequest(request);
 
