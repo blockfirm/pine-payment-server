@@ -11,7 +11,6 @@ export default {
     allowNull: false
   },
   encryptedMessage: {
-    // eslint-disable-next-line new-cap
     type: Sequelize.TEXT,
     allowNull: false,
     validate: {
