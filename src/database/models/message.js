@@ -12,8 +12,15 @@ export default {
   },
   encryptedMessage: {
     // eslint-disable-next-line new-cap
-    type: Sequelize.STRING(4096),
-    allowNull: false
+    type: Sequelize.TEXT,
+    allowNull: false,
+    validate: {
+      isNotTooLong(encryptedMessage) {
+        if (encryptedMessage && encryptedMessage.length > 20000) {
+          throw new Error('Encrypted message is too long');
+        }
+      }
+    }
   },
   signature: {
     type: Sequelize.STRING,
