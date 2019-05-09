@@ -15,7 +15,7 @@ export default {
     allowNull: false,
     validate: {
       isNotTooLong(encryptedMessage) {
-        if (encryptedMessage && encryptedMessage.length > 20000) {
+        if (encryptedMessage && encryptedMessage.length > 50000) {
           throw new Error('Encrypted message is too long');
         }
       }
