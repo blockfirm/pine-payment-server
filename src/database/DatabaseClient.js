@@ -41,10 +41,12 @@ export default class DatabaseClient {
   _defineModels() {
     const definedModels = {};
 
-    Object.keys(models).forEach((modelName) => {
-      const definedModel = this.sequelize.define(modelName, models[modelName]);
-      definedModels[modelName] = definedModel;
-      this[modelName] = definedModel;
+    Object.keys(models).forEach((name) => {
+      const model = models[name];
+      const definedModel = this.sequelize.define(name, model.fields, model.options);
+
+      definedModels[name] = definedModel;
+      this[name] = definedModel;
     });
 
     return definedModels;

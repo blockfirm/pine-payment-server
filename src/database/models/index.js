@@ -1,9 +1,9 @@
-import user from './user';
-import avatar from './avatar';
-import deviceToken from './deviceToken';
-import contactRequest from './contactRequest';
-import contact from './contact';
-import message from './message';
+import * as user from './user';
+import * as avatar from './avatar';
+import * as deviceToken from './deviceToken';
+import * as contactRequest from './contactRequest';
+import * as contact from './contact';
+import * as message from './message';
 
 export default {
   user,

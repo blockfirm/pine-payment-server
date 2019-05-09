@@ -1,6 +1,10 @@
 import Sequelize from 'sequelize';
 
-export default {
+export const options = {
+  paranoid: true // Flag messages as deleted instead of actually deleting them.
+};
+
+export const fields = {
   id: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,

@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default {
+export const fields = {
   id: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,

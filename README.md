@@ -563,6 +563,9 @@ The message is end-to-end encrypted using [Elliptic Curve Integrated Encryption]
 
 Endpoint to remove a message. Requires [authentication](#authentication).
 
+**Note:** Deleted messages will only be flagged as deleted in the database.
+This is so that they could later be restored by the user if needed (WIP).
+
 #### Parameters
 
 | Name | Type | Description |

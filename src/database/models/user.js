@@ -2,7 +2,7 @@ import bs58check from 'bs58check';
 import Sequelize from 'sequelize';
 import config from '../../config';
 
-export default {
+export const fields = {
   id: {
     type: Sequelize.STRING,
     primaryKey: true
