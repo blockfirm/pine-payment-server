@@ -51,6 +51,7 @@ const config = {
   },
   notifications: {
     webhook: 'http://localhost:50427/v1/notifications',
+    apiKey: '',
     queue: {
       attempts: 10,
       backoff: 60000 // Wait 1m before next attempt.

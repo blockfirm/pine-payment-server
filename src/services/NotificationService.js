@@ -37,9 +37,15 @@ export default class NotificationService {
   }
 
   _sendWithWebhook(deviceToken, type, context) {
-    const { webhook } = this.config.notifications;
+    const { webhook, apiKey } = this.config.notifications;
 
-    return axios.post(webhook, { deviceToken, type, context })
+    const options = {
+      headers: {
+        Authorization: `Bearer ${apiKey}`
+      }
+    };
+
+    return axios.post(webhook, { deviceToken, type, context }, options)
       .then((response) => {
         return response.data;
       })
