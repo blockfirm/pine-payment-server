@@ -13,3 +13,5 @@ npm-debug.log
 
 # Babel-transpiled code
 build/
+
+src/config.js

@@ -44,13 +44,14 @@ secure and private manner.
     ```
     $ npm install
     ```
-3. Install a database by following the steps in [Setting up the database](#setting-up-the-database)
-4. Install [Redis](https://redis.io)
-5. Start the server in development mode:
+3. Rename `src/config.template.js` to `src/config.js`
+4. Install a database by following the steps in [Setting up the database](#setting-up-the-database)
+5. Install [Redis](https://redis.io)
+6. Start the server in development mode:
     ```
     $ npm run dev
     ```
-6. Or build it and run in production mode:
+7. Or build it and run in production mode:
     ```
     $ npm run build
     $ npm start
