@@ -72,8 +72,7 @@ This is how you can do it with Postgres:
 
 ```
 $ sudo su - postgres
-$ psql
-> CREATE DATABASE pine_payment_server;
+$ createdb pine_payment_server
 ```
 
 ### Create a new user
@@ -81,6 +80,7 @@ $ psql
 Then create a new user to be used by the Pine Payment Server:
 
 ```
+$ psql pine_payment_server
 > CREATE USER pine WITH ENCRYPTED PASSWORD '<password>';
 > GRANT ALL PRIVILEGES ON DATABASE pine_payment_server TO pine;
 > \q
