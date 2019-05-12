@@ -27,8 +27,8 @@ export default class DatabaseClient {
       })
       .then(() => {
         const definedModels = this._defineModels();
-        this._defineRelations(definedModels);
-        return this._sync(definedModels);
+        defineRelations(definedModels);
+        return this._sync();
       })
       .then(() => {
         console.log('[DB] ✅ Synced');
@@ -52,15 +52,26 @@ export default class DatabaseClient {
     return definedModels;
   }
 
-  _defineRelations(definedModels) {
-    defineRelations(definedModels);
-  }
+  _sync() {
+    const orderedModels = [];
 
-  _sync(definedModels) {
-    const syncPromises = Object.values(definedModels).map((definedModel) => {
-      return definedModel.sync();
+    /**
+     * Create an ordered list of the models that takes foreign key constraints
+     * into account so that dependencies are synced before dependents.
+     */
+    this.sequelize.modelManager.forEachModel((model) => {
+      orderedModels.push(model);
     });
 
-    return Promise.all(syncPromises);
+    /**
+     * HACK: Instead of using async/await to run promises in serial,
+     * reduce is being used to chain promises together. That's because
+     * async/wait makes the unit tests crash even when using babel.
+     */
+    const syncs = orderedModels.map((model) => model.sync.bind(model));
+
+    return syncs.reduce((prevSyncPromise, sync) => {
+      return prevSyncPromise.then(sync);
+    }, Promise.resolve());
   }
 }

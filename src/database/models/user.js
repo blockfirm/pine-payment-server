@@ -95,7 +95,7 @@ export const fields = {
    * Address Index is the current BIP44 index with the next unused address.
    */
   addressIndex: {
-    type: Sequelize.INTEGER.UNSIGNED,
+    type: Sequelize.INTEGER,
     allowNull: false,
     defaultValue: 0
   },
@@ -106,7 +106,7 @@ export const fields = {
    * should rotate when reaching 19.
    */
   addressIndexOffset: {
-    type: Sequelize.INTEGER.UNSIGNED,
+    type: Sequelize.INTEGER,
     allowNull: false,
     defaultValue: 0,
     validate: {

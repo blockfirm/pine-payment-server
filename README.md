@@ -33,8 +33,8 @@ secure and private manner.
 
 ## Dependencies
 
-* [Node.js](https://nodejs.org) and [Restify](http://restify.com) for creating the REST API
-* [MariaDB](https://mariadb.org) or another SQL database for persistent storage
+* [Node.js](https://nodejs.org) (`v10`) and [Restify](http://restify.com) for creating the REST API
+* [PostgreSQL](https://www.postgresql.org) or another SQL database for persistent storage
 * [Redis](https://redis.io) for queuing notifications
 
 ## Getting started
@@ -63,15 +63,16 @@ secure and private manner.
 
 ## Setting up the database
 
-You can use any database of MariaDB (recommended), MySQL, SQLite, Postgres, and MS SQL.
+You can use any database of PostgreSQL (recommended), MySQL, SQLite, MariaDB, and MS SQL.
 
 ### Create a new database
 
 Once you have installed the database server you need to create a new database.
-This is how you can do it with MariaDB:
+This is how you can do it with Postgres:
 
 ```
-$ mysql -uroot
+$ sudo su - postgres
+$ psql
 > CREATE DATABASE pine_payment_server;
 ```
 
@@ -80,26 +81,25 @@ $ mysql -uroot
 Then create a new user to be used by the Pine Payment Server:
 
 ```
-$ mysql -uroot
-> CREATE USER 'pine'@'localhost' IDENTIFIED BY '<password>';
-> GRANT ALL ON pine_payment_server.* TO 'pine'@'localhost';
-> FLUSH PRIVILEGES;
-> exit
+> CREATE USER pine WITH ENCRYPTED PASSWORD '<password>';
+> GRANT ALL PRIVILEGES ON DATABASE pine_payment_server TO pine;
+> \q
 ```
 
 *Don't forget to enter a strong password instead of `<password>`.*
 
 ### Configure Pine Payment Server
 
-Open `src/config.js` and in the `database` section, set `dialect` to `'mysql'` and then
+Open `src/config.js` and in the `database` section, set `dialect` to `'postgres'` and then
 set the username and password for the database you created in the previous steps.
 
 ### Install a client library
 
-If you're using a database other than MariaDB or MySQL you'll need to install a client library
+If you're using a database other than PostgreSQL you'll need to install a client library
 for that database:
 
-* Postgres: `npm install pg pg-hstore`
+* MySQL: `npm install mysql2`
+* MariaDB: `npm install mariadb`
 * SQLite: `npm install sqlite3`
 * MS SQL: `npm install tedious`
 

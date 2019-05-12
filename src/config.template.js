@@ -39,7 +39,7 @@ const config = {
     }
   },
   database: {
-    dialect: 'mysql', // One of mysql, sqlite, postgres, and mssql.
+    dialect: 'postgres', // One of mysql, mariadb, sqlite, postgres, or mssql.
     host: 'localhost',
     database: 'pine_payment_server',
     username: 'pine',
