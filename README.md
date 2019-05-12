@@ -16,10 +16,14 @@ secure and private manner.
 * [Dependencies](#dependencies)
 * [Getting started](#getting-started)
 * [Setting up the database](#setting-up-the-database)
+* [Setting up a domain name](#setting-up-a-domain-name)
+  * [Configure your DNS](#configure-your-dns)
+  * [Configure SSL](#configure-ssl)
+  * [Test your setup](#test-your-setup)
 * [Setting up push notifications](#setting-up-push-notifications)
   * [Send notifications to the official Pine app](#send-notifications-to-the-official-pine-app)
   * [Send notifications to your own app](#send-notifications-to-your-own-app)
-* [API Docs](#api)
+* [API documentation](#api-documentation)
   * [Endpoints](#endpoints)
   * [Error handling](#error-handling)
   * [Authentication](#authentication)
@@ -99,6 +103,27 @@ for that database:
 * SQLite: `npm install sqlite3`
 * MS SQL: `npm install tedious`
 
+## Setting up a domain name
+
+### Configure your DNS
+
+Create a new subdomain on the domain that you want to use for your Pine Payment Server.
+The new subdomain should be either an `A` or `CNAME` record with the value `pine-payment-server`
+and point to your Pine server.
+
+### Configure SSL
+
+The Pine Payment Protocol requires all payment servers to be configured with SSL (HTTPS). The server
+doesn't directly support that so instead you need to setup a reverse proxy such as [nginx](https://www.nginx.com)
+and terminate there before forwarding to the Pine Payment Server. The easiest way to obtain an SSL
+certificate is by using [Let's Encrypt](https://letsencrypt.org).
+
+### Test your setup
+
+Browse to `https://pine-payment-server.example.org/v1/info` and verify that you get a JSON object as a response.
+
+*(Replace `example.org` with your own domain name.)*
+
 ## Setting up push notifications
 
 There are two ways to set up push notifications; set up your own notification service with your own app,
@@ -126,7 +151,7 @@ If you are running the app from source you will need to configure and host your 
 4. Set `notifications.apiKey` to your [obtained API key](https://github.com/blockfirm/pine-notification-service#obtaining-an-api-key)
 5. Build and restart the server
 
-## API
+## API documentation
 
 ### Endpoints
 
