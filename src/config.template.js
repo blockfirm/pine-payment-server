@@ -58,7 +58,7 @@ const config = {
     }
   },
   bitcoin: {
-    network: 'testnet' // 'mainnet' or 'testnet'
+    network: 'mainnet' // 'mainnet' or 'testnet'
   }
 };
 
