@@ -5,7 +5,7 @@ Pine Payment Server
 [![Build Status](https://img.shields.io/travis/blockfirm/pine-payment-server.svg?branch=master&style=flat-square)](https://travis-ci.org/blockfirm/pine-payment-server)
 [![Coverage Status](https://img.shields.io/coveralls/blockfirm/pine-payment-server.svg?style=flat-square)](https://coveralls.io/r/blockfirm/pine-payment-server)
 
-This is an implementation of the [Pine](https://pinewallet.co) Payment Protocol - a second layer protocol on top
+This is an implementation of the [Pine](https://pine.pm) Payment Protocol - a second layer protocol on top
 of bitcoin for sending payments using human-readable payment addresses similar to email addresses. It doesn't
 change the way transactions are made or stored on the bitcoin network and blockchain. The server only handles
 anonymous user profiles and the exchange of bitcoin addresses and signed transactions in a decentralized,
