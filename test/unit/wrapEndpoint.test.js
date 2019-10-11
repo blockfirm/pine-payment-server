@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 const handleErrorSpy = sinon.spy();
 
-const wrapEndpoint = proxyquire('../src/wrapEndpoint', {
+const wrapEndpoint = proxyquire('../../src/wrapEndpoint', {
   './handleError': { default: handleErrorSpy }
 }).default;
 

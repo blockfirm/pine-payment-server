@@ -1,5 +1,5 @@
 import assert from 'assert';
-import verify from '../../src/crypto/verify';
+import verify from '../../../src/crypto/verify';
 
 describe('verify', () => {
   it('is a function', () => {

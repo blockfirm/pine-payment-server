@@ -1,5 +1,5 @@
 import assert from 'assert';
-import getUserIdFromPublicKey from '../../src/crypto/getUserIdFromPublicKey';
+import getUserIdFromPublicKey from '../../../src/crypto/getUserIdFromPublicKey';
 
 describe('getUserIdFromPublicKey', () => {
   it('is a function', () => {

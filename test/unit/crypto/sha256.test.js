@@ -1,5 +1,5 @@
 import assert from 'assert';
-import sha256 from '../../src/crypto/sha256';
+import sha256 from '../../../src/crypto/sha256';
 
 describe('sha256', () => {
   it('is a function', () => {

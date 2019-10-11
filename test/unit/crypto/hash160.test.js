@@ -1,5 +1,5 @@
 import assert from 'assert';
-import hash160 from '../../src/crypto/hash160';
+import hash160 from '../../../src/crypto/hash160';
 
 describe('hash160', () => {
   it('is a function', () => {

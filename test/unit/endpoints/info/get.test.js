@@ -1,7 +1,7 @@
 import assert from 'assert';
 import sinon from 'sinon';
 
-import * as infoEndpoints from '../../../src/endpoints/info';
+import * as infoEndpoints from '../../../../src/endpoints/info';
 
 describe('endpoints/info/get.js', () => {
   describe('#get(request, response)', () => {

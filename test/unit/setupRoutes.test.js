@@ -5,7 +5,7 @@ import configMock from './configMock';
 
 const wrapEndpointSpy = sinon.spy();
 
-const setupRoutes = proxyquire('../src/setupRoutes', {
+const setupRoutes = proxyquire('../../src/setupRoutes', {
   './config': { ...configMock, '@noCallThru': true, '@global': true },
   '../../config': { ...configMock, '@noCallThru': true, '@global': true },
   './createContext': { default: () => ({}) },

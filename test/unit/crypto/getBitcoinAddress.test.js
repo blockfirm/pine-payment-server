@@ -1,5 +1,5 @@
 import assert from 'assert';
-import getBitcoinAddress from '../../src/crypto/getBitcoinAddress';
+import getBitcoinAddress from '../../../src/crypto/getBitcoinAddress';
 
 describe('getBitcoinAddress', () => {
   it('is a function', () => {

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import sinon from 'sinon';
-import handleError from '../src/handleError';
+import handleError from '../../src/handleError';
 
 describe('handleError.js', () => {
   describe('handleError(error, response)', () => {
