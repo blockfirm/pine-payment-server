@@ -15,3 +15,7 @@ npm-debug.log
 build/
 
 src/config.js
+
+# Vim swap files
+*.swp
+*.swo
