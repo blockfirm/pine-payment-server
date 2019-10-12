@@ -22,8 +22,11 @@ export default class Server {
   start() {
     const { server, config } = this;
 
-    server.listen(config.api.port, () => {
-      console.log('Pine Payment Server is listening at %s', server.url);
+    return new Promise(resolve => {
+      server.listen(config.api.port, () => {
+        console.log('Pine Payment Server is listening at %s', server.url);
+        resolve();
+      });
     });
   }
 

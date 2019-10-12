@@ -28,6 +28,9 @@ a decentralized, secure and private manner.
   * [Error handling](#error-handling)
   * [Authentication](#authentication)
   * [Rate limiting](#rate-limiting)
+* [Testing](#testing)
+  * [Unit tests](#unit-tests)
+  * [Integration tests](#integration-tests)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
 
@@ -650,6 +653,30 @@ rateLimit: {
   xff: true
   ...
 }
+```
+
+## Testing
+
+### Unit tests
+
+The unit tests mostly test the cryptographic functions and other things related to the server setup.
+The API endpoints are easier to test using integration tests.
+
+To run the unit tests, run the following command:
+
+```
+$ npm test
+```
+
+### Integration tests
+
+The integration tests test that the API endpoints are working as expected. They require that you have
+a testing environment set up and configured locally.
+
+To run the integration tests, run the following command:
+
+```
+$ npm run test-it
 ```
 
 ## Contributing
