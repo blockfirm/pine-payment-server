@@ -4,6 +4,7 @@ import * as deviceToken from './deviceToken';
 import * as contactRequest from './contactRequest';
 import * as contact from './contact';
 import * as message from './message';
+import * as invoice from './invoice';
 
 export default {
   user,
@@ -11,5 +12,6 @@ export default {
   deviceToken,
   contactRequest,
   contact,
-  message
+  message,
+  invoice
 };

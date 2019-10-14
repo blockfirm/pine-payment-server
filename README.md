@@ -180,6 +180,7 @@ If you are running the app from source you will need to configure and host your 
 | GET | [/v1/users/:userId/messages](#get-v1usersuseridmessages) | Get all incoming messages for a user |
 | POST | [/v1/users/:userId/messages](#post-v1usersuseridmessages) | Send a message to a user |
 | DELETE | [/v1/users/:userId/messages/:messageId](#delete-v1usersuseridmessagesmessageid) | Remove a message |
+| POST | [/v1/users/:userId/lightning/invoices](#post-v1usersuseridlightninginvoices) | Get a new lightning invoice for a user |
 
 ### `GET` /v1/info
 
@@ -603,6 +604,33 @@ This is so that they could later be restored by the user if needed (WIP).
 | --- | --- | --- |
 | userId | *string* | ID of the user to remove a message for |
 | messageId | *string* | ID of the message to remove |
+
+### `POST` /v1/users/:userId/lightning/invoices
+
+Endpoint to get a new lightning invoice for a user. Requires external [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to get an invoice for |
+
+#### Body
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| amount | *string* | The invoice amount in satoshis |
+
+#### Returns
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| amount | *string* | The specified invoice amount in satoshis |
+| paymentRequest | *string* | Lightning payment request |
 
 ### Error handling
 

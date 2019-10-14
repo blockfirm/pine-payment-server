@@ -11,7 +11,7 @@ const BIP49_ACCOUNT_INDEX = 0;
  *
  * @returns {Promise} A promise that resolves to the created user.
  */
-const create = (username, mnemonic, apiPort) => {
+const createUser = (username, mnemonic, apiPort) => {
   const keyPair = getKeyPairFromMnemonic(mnemonic);
   const publicKey = keyPair.publicKey;
   const extendedPublicKey = getAccountPublicKeyFromMnemonic(mnemonic, 'testnet', BIP49_ACCOUNT_INDEX);
@@ -50,5 +50,5 @@ const create = (username, mnemonic, apiPort) => {
     });
 };
 
-export default create;
+export default createUser;
 

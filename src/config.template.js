@@ -59,6 +59,12 @@ const config = {
   },
   bitcoin: {
     network: 'mainnet' // 'mainnet' or 'testnet'
+  },
+  lightning: {
+    gateway: {
+      rpcHost: 'localhost:10002',
+      macaroon: '~/.lnd/data/chain/bitcoin/simnet/invoice.macaroon'
+    }
   }
 };
 

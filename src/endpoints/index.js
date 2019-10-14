@@ -7,6 +7,7 @@ import * as usersContacts from './users/contacts';
 import * as usersAddress from './users/address';
 import * as usersAddressUsed from './users/address/used';
 import * as usersMessages from './users/messages';
+import * as usersLightningInvoices from './users/lightning/invoices';
 
 const endpoints = {
   '/info': info,
@@ -17,7 +18,8 @@ const endpoints = {
   '/users/:userId/contacts': usersContacts,
   '/users/:userId/address': usersAddress,
   '/users/:userId/address/used': usersAddressUsed,
-  '/users/:userId/messages': usersMessages
+  '/users/:userId/messages': usersMessages,
+  '/users/:userId/lightning/invoices': usersLightningInvoices
 };
 
 export default endpoints;
