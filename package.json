@@ -36,7 +36,8 @@
     "restify": "^8.4.0",
     "restify-errors": "^6.1.1",
     "secp256k1": "^3.7.1",
-    "sequelize": "^5.19.6"
+    "sequelize": "^5.19.6",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -48,11 +49,11 @@
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "bip39": "^3.0.2",
     "coveralls": "^3.0.7",
+    "elliptic": "^6.5.1",
     "eslint": "^4.7.1",
     "mocha": "^5.2.0",
     "nyc": "^14.1.1",
     "proxyquire": "^1.8.0",
-    "sinon": "^4.0.0",
-    "uuid": "^3.3.3"
+    "sinon": "^4.0.0"
   }
 }

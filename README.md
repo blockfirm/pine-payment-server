@@ -622,6 +622,8 @@ As JSON:
 | Name | Type | Description |
 | --- | --- | --- |
 | amount | *string* | The invoice amount in satoshis |
+| paymentMessage | *string* | Encrypted payment message to send to the payee (recipient) when the invoice has been paid. See [POST /v1/users/:userId/messages](#post-v1usersuseridmessages) for more information |
+| paymentMessageSignature | *string* | Signature of the payment message signed by the payer (sender). See [POST /v1/users/:userId/messages](#post-v1usersuseridmessages) for more information |
 
 #### Returns
 
