@@ -4,20 +4,6 @@ import createLnrpc from 'lnrpc';
 const SUBSCRIPTION_REOPEN_DELAY = 2000; // 2s
 const SETTLE_INDEX_REDIS_KEY = 'pine:lightning:settle-index';
 
-const getInvoiceIdFromMemo = (memo) => {
-  if (!memo) {
-    return;
-  }
-
-  const params = memo.split(';').reduce((map, param) => {
-    const [key, value] = param.split(':');
-    map[key] = value;
-    return map;
-  }, {});
-
-  return params.id;
-};
-
 export default class LndService {
   constructor(config, database, redis) {
     this.config = config;
@@ -99,28 +85,22 @@ export default class LndService {
     });
   }
 
-  // eslint-disable-next-line max-statements
-  async _onInvoiceSettled(invoice) {
-    const memo = invoice.memo;
-    const settleIndex = parseInt(invoice.settle_index.toString());
-    const settleDate = parseInt(invoice.settle_date.toString());
-    const amountPaid = invoice.amt_paid_sat.toString();
-    const invoiceId = getInvoiceIdFromMemo(memo);
-    console.log('[INVOICE]', invoice);
-    if (!invoiceId) {
-      throw new Error(`Invoice ID is missing from memo (memo: ${memo})`);
-    }
+  async _onInvoiceSettled(lndInvoice) {
+    const settleIndex = parseInt(lndInvoice.settle_index.toString());
+    const settleDate = parseInt(lndInvoice.settle_date.toString());
+    const amountPaid = lndInvoice.amt_paid_sat.toString();
+    const preimageHash = lndInvoice.r_hash.toString('hex');
 
     const dbInvoice = await this.database.invoice.findOne({
-      where: { id: invoiceId }
+      where: { preimageHash }
     });
 
     if (!dbInvoice) {
-      throw new Error(`Invoice not found (id: ${invoiceId})`);
+      throw new Error(`Invoice not found (hash: ${preimageHash})`);
     }
 
     if (dbInvoice.paid) {
-      throw new Error(`Invoice has already been paid (id: ${invoiceId})`);
+      throw new Error(`Invoice has already been paid (id: ${dbInvoice.id})`);
     }
 
     dbInvoice.paid = true;
@@ -129,7 +109,8 @@ export default class LndService {
 
     await dbInvoice.save({ fields: ['paid', 'amountPaid', 'paidAt'] });
     await this._setSettleIndex(settleIndex);
-    console.log('Invoice processed');
+
+    console.log(`[LND] Invoice paid (id: ${dbInvoice.id})`);
   }
 
   async getInvoice(amount, memo) {
@@ -140,7 +121,8 @@ export default class LndService {
     const lndInvoice = await this.rpc.addInvoice({ value: amount, memo });
 
     return {
-      paymentRequest: lndInvoice.payment_request
+      paymentRequest: lndInvoice.payment_request,
+      rHash: lndInvoice.r_hash
     };
   }
 }

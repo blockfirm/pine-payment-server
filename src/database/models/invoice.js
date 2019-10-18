@@ -7,6 +7,16 @@ export const fields = {
     primaryKey: true
   },
 
+  /**
+   * Hash of the invoice's preimage. Used for mapping
+   * an invoice from lnd to an invoice in the database.
+   */
+  preimageHash: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  },
+
   // Pine address of the user who will pay the invoice.
   payer: {
     type: Sequelize.STRING,

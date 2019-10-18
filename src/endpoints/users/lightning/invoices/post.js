@@ -1,6 +1,4 @@
 import errors from 'restify-errors';
-import uuidv4 from 'uuid/v4';
-
 import verify from '../../../../crypto/verify';
 import { validatePaymentMessage } from '../../../../validators';
 
@@ -30,27 +28,6 @@ const getContact = async (address, userId, database) => {
   }
 
   return contact;
-};
-
-/**
- * Gets a new lightning invoice from the lnd gateway node.
- *
- * @param {string} amount - Amount in satoshis of the invoice.
- * @param {string} userId - ID of the user the invoice will be paid to (payee).
- * @param {LndService} lndGateway - LndService instance for the lnd gateway node.
- *
- * return {Promise.Object} A promise that will resolve to the created invoice.
- */
-const createLndInvoice = async (amount, userId, lndGateway) => {
-  const id = uuidv4();
-  const memo = `user-id:${userId};id:${id}`;
-  const invoice = await lndGateway.getInvoice(amount, memo);
-
-  return {
-    id,
-    value: invoice.value,
-    paymentRequest: invoice.paymentRequest
-  };
 };
 
 // eslint-disable-next-line max-statements
@@ -88,10 +65,10 @@ const post = async function post(request, response) {
 
   const user = await getUser(userId, database);
   const contact = await getContact(request.address, user.id, database);
-  const invoice = await createLndInvoice(amount, user.id, lndGateway);
+  const lndInvoice = await lndGateway.getInvoice(amount);
 
-  await database.invoice.create({
-    id: invoice.id,
+  const dbInvoice = await database.invoice.create({
+    preimageHash: lndInvoice.rHash.toString('hex'),
     payer: contact.address,
     userId,
     paymentMessage,
@@ -99,9 +76,9 @@ const post = async function post(request, response) {
   });
 
   response.send({
-    id: invoice.id,
-    amount: invoice.value,
-    paymentRequest: invoice.paymentRequest
+    id: dbInvoice.id,
+    amount: lndInvoice.value,
+    paymentRequest: lndInvoice.paymentRequest
   });
 };
 
