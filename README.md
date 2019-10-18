@@ -38,7 +38,7 @@ a decentralized, secure and private manner.
 
 * [Node.js](https://nodejs.org) (`v10`) and [Restify](http://restify.com) for creating the REST API
 * [PostgreSQL](https://www.postgresql.org) or another SQL database for persistent storage
-* [Redis](https://redis.io) for queuing notifications
+* [Redis](https://redis.io) for queuing notifications and persisting some state
 
 ## Getting started
 

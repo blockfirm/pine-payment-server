@@ -1,17 +1,19 @@
-import { DatabaseClient } from './database';
-import { NotificationService } from './services';
-import { Lnd } from './lnd';
+import { DatabaseClient, RedisClient } from './database';
+import { LndService, NotificationService } from './services';
 
 const createContext = (config) => {
-  const context = {
-    database: new DatabaseClient(config.database),
-    lndGateway: new Lnd(config.lightning.gateway),
+  const database = new DatabaseClient(config.database);
+  const redis = new RedisClient(config.redis);
+  const notifications = new NotificationService(config, database);
+  const lndGateway = new LndService(config.lightning.gateway, database, redis);
+
+  return {
+    database,
+    redis,
+    notifications,
+    lndGateway,
     config
   };
-
-  context.notifications = new NotificationService(config, context.database);
-
-  return context;
 };
 
 export default createContext;

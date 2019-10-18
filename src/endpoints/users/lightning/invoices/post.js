@@ -4,8 +4,6 @@ import uuidv4 from 'uuid/v4';
 import verify from '../../../../crypto/verify';
 import { validatePaymentMessage } from '../../../../validators';
 
-const INVOICE_STATE_OPEN = 'open';
-
 const getUser = async (userId, database) => {
   const userQuery = {
     where: { id: userId }
@@ -35,34 +33,11 @@ const getContact = async (address, userId, database) => {
 };
 
 /**
- * Saves a lightning invoice to the database.
- *
- * @param {Object} invoice - Invoice to save.
- * @param {string} invoice.id - A UUID v4.
- * @param {string} invoice.payer - Pine address of the user that will pay the invoice.
- * @param {string} invoice.userId - ID of the user the invoice will be paid to (payee).
- * @param {string} invoice.paymentMessage - Encrypted payment message to be sent to
- *                 the payee once the invoice has been paid.
- * @param {string} invoice.paymentMessageSignature - Signature of the message signed by the payer.
- * @param {DatabaseClient} database - DatabaseClient instance.
- *
- * return {Promise} A promise that will resolve when the invoice has been saved.
- */
-const saveInvoice = (invoice, database) => {
-  const invoiceQuery = {
-    ...invoice,
-    state: INVOICE_STATE_OPEN
-  };
-
-  return database.invoice.create(invoiceQuery);
-};
-
-/**
  * Gets a new lightning invoice from the lnd gateway node.
  *
  * @param {string} amount - Amount in satoshis of the invoice.
  * @param {string} userId - ID of the user the invoice will be paid to (payee).
- * @param {Lnd} lndGateway - Lnd instance to the lnd gateway node.
+ * @param {LndService} lndGateway - LndService instance for the lnd gateway node.
  *
  * return {Promise.Object} A promise that will resolve to the created invoice.
  */
@@ -115,13 +90,13 @@ const post = async function post(request, response) {
   const contact = await getContact(request.address, user.id, database);
   const invoice = await createLndInvoice(amount, user.id, lndGateway);
 
-  await saveInvoice({
+  await database.invoice.create({
     id: invoice.id,
     payer: contact.address,
     userId,
     paymentMessage,
     paymentMessageSignature
-  }, database);
+  });
 
   response.send({
     id: invoice.id,

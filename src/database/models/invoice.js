@@ -13,9 +13,20 @@ export const fields = {
     allowNull: false
   },
 
-  state: {
-    type: Sequelize.ENUM,
-    values: ['open', 'settled', 'canceled', 'accepted']
+  // Whether or not this invoice has been paid.
+  paid: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+
+  // Amount that was paid in satoshis.
+  amountPaid: {
+    type: Sequelize.STRING
+  },
+
+  // Timestamp when the invoice was paid.
+  paidAt: {
+    type: Sequelize.DATE
   },
 
   /**
