@@ -1,14 +1,16 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase, max-lines */
 import createLnrpc from 'lnrpc';
 
 const SUBSCRIPTION_REOPEN_DELAY = 2000; // 2s
 const SETTLE_INDEX_REDIS_KEY = 'pine:lightning:settle-index';
 
 export default class LndService {
-  constructor(config, database, redis) {
+  // eslint-disable-next-line max-params
+  constructor(config, database, redis, notifications) {
     this.config = config;
     this.database = database;
     this.redis = redis;
+    this.notifications = notifications;
 
     this._getSettleIndex()
       .then(settleIndex => {
@@ -85,6 +87,7 @@ export default class LndService {
     });
   }
 
+  // eslint-disable-next-line max-statements
   async _onInvoiceSettled(lndInvoice) {
     const settleIndex = parseInt(lndInvoice.settle_index.toString());
     const settleDate = parseInt(lndInvoice.settle_date.toString());
@@ -108,9 +111,28 @@ export default class LndService {
     dbInvoice.paidAt = new Date(settleDate * 1000);
 
     await dbInvoice.save({ fields: ['paid', 'amountPaid', 'paidAt'] });
+
+    await this._sendMessage({
+      from: dbInvoice.payer,
+      userId: dbInvoice.userId,
+      encryptedMessage: dbInvoice.paymentMessage,
+      signature: dbInvoice.paymentMessageSignature
+    });
+
     await this._setSettleIndex(settleIndex);
 
     console.log(`[LND] Invoice paid (id: ${dbInvoice.id})`);
+  }
+
+  async _sendMessage(message) {
+    const { database, notifications } = this;
+    const createdMessage = await database.message.create(message);
+
+    notifications.notify(message.userId, notifications.INCOMING_PAYMENT, {
+      address: message.from
+    });
+
+    return createdMessage;
   }
 
   async getInvoice(amount, memo) {

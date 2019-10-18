@@ -38,7 +38,7 @@ const validateSignature = (encryptedMessage, signature, userId) => {
 
 const createMessage = (message, database, notifications) => {
   return database.message.create(message).then((createdMessage) => {
-    notifications.notify(message.userId, 'incomingPayment', {
+    notifications.notify(message.userId, notifications.INCOMING_PAYMENT, {
       address: message.from
     });
 

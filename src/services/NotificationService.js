@@ -3,6 +3,8 @@ import axios from 'axios';
 
 export default class NotificationService {
   constructor(config, database) {
+    this.INCOMING_PAYMENT = 'incomingPayment';
+
     this.config = config;
     this.database = database;
 

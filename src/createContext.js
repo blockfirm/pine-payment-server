@@ -5,7 +5,7 @@ const createContext = (config) => {
   const database = new DatabaseClient(config.database);
   const redis = new RedisClient(config.redis);
   const notifications = new NotificationService(config, database);
-  const lndGateway = new LndService(config.lightning.gateway, database, redis);
+  const lndGateway = new LndService(config.lightning.gateway, database, redis, notifications);
 
   return {
     database,
