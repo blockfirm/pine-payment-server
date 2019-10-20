@@ -33,6 +33,7 @@ const get = function get(request, response) {
           from: message.from,
           encryptedMessage: message.encryptedMessage,
           signature: message.signature,
+          invoiceId: message.invoiceId,
           createdAt: getUnixTimestamp(message.createdAt)
         }));
       })

@@ -116,7 +116,8 @@ export default class LndService {
       from: dbInvoice.payer,
       userId: dbInvoice.userId,
       encryptedMessage: dbInvoice.paymentMessage,
-      signature: dbInvoice.paymentMessageSignature
+      signature: dbInvoice.paymentMessageSignature,
+      invoiceId: dbInvoice.id
     });
 
     await this._setSettleIndex(settleIndex);

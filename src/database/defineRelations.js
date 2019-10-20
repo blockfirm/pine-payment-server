@@ -5,6 +5,8 @@ const defineRelations = (models) => {
   models.user.hasMany(models.contact);
   models.user.hasMany(models.message);
   models.user.hasMany(models.invoice);
+
+  models.message.hasOne(models.invoice);
 };
 
 export default defineRelations;

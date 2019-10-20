@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getKeyPairFromMnemonic, getAuthorizationHeader } from './crypto';
 
 /**
- * Gets a new lightning invoice for a user.
+ * Creates a new lightning invoice for a user.
  *
  * @param {Object} invoice - Invoice details.
  * @param {string} invoice.amount - Amount in satoshis of the invoice.

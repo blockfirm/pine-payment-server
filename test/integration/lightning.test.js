@@ -6,7 +6,13 @@ import uuidv4 from 'uuid/v4';
 import config from '../../src/config';
 import Server from '../../src/Server';
 import { getKeyPairFromMnemonic, encrypt, sign } from './client/crypto';
-import { createUser, addContact, createLightningInvoice } from './client';
+
+import {
+  createUser,
+  addContact,
+  createLightningInvoice,
+  getLightningInvoice
+} from './client';
 
 const wait = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -71,7 +77,7 @@ describe('lightning', () => {
     return server.stop();
   });
 
-  it('can get a lightning invoice for a contact', async () => {
+  it('can create a lightning invoice for a contact', async () => {
     const amount = '25000';
     const payee = users[0]; // Payee = the recipient of the payment
 
@@ -106,7 +112,7 @@ describe('lightning', () => {
     });
   });
 
-  it('cannot get a lightning invoice for a user that is not a contact', async () => {
+  it('cannot create a lightning invoice for a user that is not a contact', async () => {
     const amount = '35000';
     const payee = users[0]; // Payee = the recipient of the payment
 
@@ -145,7 +151,7 @@ describe('lightning', () => {
       });
   });
 
-  it('cannot get a lightning invoice without an amount', async () => {
+  it('cannot create a lightning invoice without an amount', async () => {
     const payee = users[0]; // Payee = the recipient of the payment
 
     const credentials = {
@@ -182,7 +188,7 @@ describe('lightning', () => {
       });
   });
 
-  it('cannot get a lightning invoice without a payment message', async () => {
+  it('cannot create a lightning invoice without a payment message', async () => {
     const amount = '1234';
     const payee = users[0]; // Payee = the recipient of the payment
 
@@ -205,5 +211,184 @@ describe('lightning', () => {
           assert(false, error.message);
         }
       });
+  });
+
+  it('can get a lightning invoice where the external user is the payer', async () => {
+    const amount = '25000';
+    const payee = users[0]; // Payee = the recipient of the payment
+
+    const credentials = {
+      username: usernames[1],
+      mnemonic: mnemonics[1]
+    };
+
+    const message = {
+      version: 1,
+      type: 'ln_payment',
+      data: {}
+    };
+
+    const { encryptedMessage, signature } = await encryptPaymentMessage(
+      message,
+      bs58check.decode(payee.publicKey),
+      getKeyPairFromMnemonic(credentials.mnemonic)
+    );
+
+    const invoice = {
+      amount,
+      payee: payee.id,
+      paymentMessage: encryptedMessage,
+      paymentMessageSignature: signature
+    };
+
+    return createLightningInvoice(invoice, credentials, config.api.port).then(createdInvoice => {
+      return getLightningInvoice({
+        id: createdInvoice.id,
+        payee: payee.id
+      }, credentials, config.api.port).then(fetchedInvoice => {
+        assert(fetchedInvoice.id, 'Invoice ID is missing');
+      });
+    });
+  });
+
+  it('cannot get a lightning invoice where the external user is not the payer', async () => {
+    const amount = '25000';
+    const payee = users[0]; // Payee = the recipient of the payment
+
+    const credentials = {
+      username: usernames[1],
+      mnemonic: mnemonics[1]
+    };
+
+    const message = {
+      version: 1,
+      type: 'ln_payment',
+      data: {}
+    };
+
+    const { encryptedMessage, signature } = await encryptPaymentMessage(
+      message,
+      bs58check.decode(payee.publicKey),
+      getKeyPairFromMnemonic(credentials.mnemonic)
+    );
+
+    const invoice = {
+      amount,
+      payee: payee.id,
+      paymentMessage: encryptedMessage,
+      paymentMessageSignature: signature
+    };
+
+    return createLightningInvoice(invoice, credentials, config.api.port).then(createdInvoice => {
+      const unauthorizedCredentials = {
+        username: usernames[2],
+        mnemonic: mnemonics[2]
+      };
+
+      return getLightningInvoice({
+        id: createdInvoice.id,
+        payee: payee.id
+      }, unauthorizedCredentials, config.api.port)
+        .then(() => {
+          assert(false, 'Managed to get an invoice that does not belong to the user');
+        })
+        .catch(error => {
+          if (!error.response || error.response.data.code !== 'NotFound') {
+            assert(false, error.message);
+          }
+        });
+    });
+  });
+
+  it('can get a lightning invoice where the internal user is the payee', async () => {
+    const amount = '25000';
+    const payee = users[0]; // Payee = the recipient of the payment
+
+    const credentials = {
+      username: usernames[1],
+      mnemonic: mnemonics[1]
+    };
+
+    const message = {
+      version: 1,
+      type: 'ln_payment',
+      data: {}
+    };
+
+    const { encryptedMessage, signature } = await encryptPaymentMessage(
+      message,
+      bs58check.decode(payee.publicKey),
+      getKeyPairFromMnemonic(credentials.mnemonic)
+    );
+
+    const invoice = {
+      amount,
+      payee: payee.id,
+      paymentMessage: encryptedMessage,
+      paymentMessageSignature: signature
+    };
+
+    return createLightningInvoice(invoice, credentials, config.api.port).then(createdInvoice => {
+      const payeeCredentials = {
+        userId: payee.id,
+        mnemonic: mnemonics[0]
+      };
+
+      return getLightningInvoice({
+        id: createdInvoice.id,
+        payee: payee.id
+      }, payeeCredentials, config.api.port).then(fetchedInvoice => {
+        assert(fetchedInvoice.id, 'Invoice ID is missing');
+      });
+    });
+  });
+
+  it('cannot get a lightning invoice where the internal user is not the payee', async () => {
+    const amount = '25000';
+    const payee = users[0]; // Payee = the recipient of the payment
+
+    const credentials = {
+      username: usernames[1],
+      mnemonic: mnemonics[1]
+    };
+
+    const message = {
+      version: 1,
+      type: 'ln_payment',
+      data: {}
+    };
+
+    const { encryptedMessage, signature } = await encryptPaymentMessage(
+      message,
+      bs58check.decode(payee.publicKey),
+      getKeyPairFromMnemonic(credentials.mnemonic)
+    );
+
+    const invoice = {
+      amount,
+      payee: payee.id,
+      paymentMessage: encryptedMessage,
+      paymentMessageSignature: signature
+    };
+
+    return createLightningInvoice(invoice, credentials, config.api.port).then(createdInvoice => {
+      const unauthorizedCredentials = {
+        userId: users[1].id,
+        mnemonic: mnemonics[1]
+      };
+
+      return getLightningInvoice({
+        id: createdInvoice.id,
+        payee: payee.id
+      }, unauthorizedCredentials, config.api.port)
+        .then(() => {
+          assert(false, 'Managed to get an invoice that does not belong to the user');
+        })
+        .catch(error => {
+          if (!error.response || error.response.data.code !== 'Unauthorized') {
+            assert(false, error.message);
+          }
+        });
+    });
   });
 });

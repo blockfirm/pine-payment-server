@@ -59,5 +59,21 @@ export const fields = {
   paymentMessageSignature: {
     type: Sequelize.STRING,
     allowNull: false
+  },
+
+  // Whether or not this invoice has been redeemed by the payee.
+  redeemed: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+
+  // Timestamp when invoice was redeemed by the payee.
+  redeemedAt: {
+    type: Sequelize.DATE
+  },
+
+  // Payment request that was used to redeem this invoice.
+  redeemedWithPaymentRequest: {
+    type: Sequelize.STRING
   }
 };
