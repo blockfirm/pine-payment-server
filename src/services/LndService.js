@@ -91,7 +91,7 @@ export default class LndService {
   async _onInvoiceSettled(lndInvoice) {
     const settleIndex = parseInt(lndInvoice.settle_index.toString());
     const settleDate = parseInt(lndInvoice.settle_date.toString());
-    const amountPaid = lndInvoice.amt_paid_sat.toString();
+    const paidAmount = lndInvoice.amt_paid_sat.toString();
     const preimageHash = lndInvoice.r_hash.toString('hex');
 
     const dbInvoice = await this.database.invoice.findOne({
@@ -107,10 +107,10 @@ export default class LndService {
     }
 
     dbInvoice.paid = true;
-    dbInvoice.amountPaid = amountPaid;
+    dbInvoice.paidAmount = paidAmount;
     dbInvoice.paidAt = new Date(settleDate * 1000);
 
-    await dbInvoice.save({ fields: ['paid', 'amountPaid', 'paidAt'] });
+    await dbInvoice.save({ fields: ['paid', 'paidAmount', 'paidAt'] });
 
     await this._sendMessage({
       from: dbInvoice.payer,

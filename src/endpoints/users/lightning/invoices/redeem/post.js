@@ -35,7 +35,7 @@ const validateRequest = (request) => {
 const validatePaymentRequest = async (invoice, paymentRequest, lndGateway) => {
   const paymentDetails = await lndGateway.decodePaymentRequest(paymentRequest);
 
-  if (paymentDetails.numSatoshis !== invoice.amountPaid) {
+  if (paymentDetails.numSatoshis !== invoice.paidAmount) {
     throw new errors.BadRequestError('The payment request amount does not match invoice amount');
   }
 

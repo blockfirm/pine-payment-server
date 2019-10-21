@@ -30,7 +30,7 @@ export const fields = {
   },
 
   // Amount that was paid in satoshis.
-  amountPaid: {
+  paidAmount: {
     type: Sequelize.STRING
   },
 
