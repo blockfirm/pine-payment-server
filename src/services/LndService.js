@@ -148,4 +148,44 @@ export default class LndService {
       rHash: lndInvoice.r_hash
     };
   }
+
+  async decodePaymentRequest(paymentRequest) {
+    if (!this.rpc) {
+      throw new Error('Not connected to gateway node');
+    }
+
+    const response = await this.rpc.decodePayReq({
+      pay_req: paymentRequest
+    });
+
+    return {
+      destination: response.destination,
+      paymentHash: response.payment_hash,
+      numSatoshis: response.num_satoshis.toString(),
+      timestamp: parseInt(response.timestamp.toString()),
+      expiry: parseInt(response.expiry.toString()),
+      description: response.description,
+      descriptionHash: response.description_hash,
+      fallbackAddr: response.fallback_addr,
+      cltvExpiry: parseInt(response.cltv_expiry.toString())
+    };
+  }
+
+  async sendPayment(paymentRequest) {
+    if (!this.rpc) {
+      throw new Error('Not connected to gateway node');
+    }
+
+    const response = await this.rpc.sendPaymentSync({
+      payment_request: paymentRequest
+    });
+
+    if (response.payment_error) {
+      throw new Error(`Payment error: ${response.payment_error}`);
+    }
+
+    return {
+      paymentHash: response.payment_hash.toString('hex')
+    };
+  }
 }

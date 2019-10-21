@@ -182,6 +182,7 @@ If you are running the app from source you will need to configure and host your 
 | DELETE | [/v1/users/:userId/messages/:messageId](#delete-v1usersuseridmessagesmessageid) | Remove a message |
 | POST | [/v1/users/:userId/lightning/invoices](#post-v1usersuseridlightninginvoices) | Get a new lightning invoice for a user |
 | GET | [/v1/users/:userId/lightning/invoices/:invoiceId](#get-v1usersuseridlightninginvoicesinvoiceid) | Get status of an existing lightning invoice |
+| POST | [/v1/users/:userId/lightning/invoices/:invoiceId/redeem](#post-v1usersuseridlightninginvoicesinvoiceidredeem) | Redeem a paid lightning invoice |
 
 ### `GET` /v1/info
 
@@ -662,6 +663,30 @@ As JSON:
 | paidAt | *number* | When the invoice was paid (unix timestamp) |
 | redeemed | *boolean* | Whether the invoice has been redeemed by its payee or not |
 | redeemedAt | *number* | When the invoice was redeemed by its payee (unix timestamp) |
+
+### `POST` /v1/users/:userId/lightning/invoices/:invoiceId/redeem
+
+Endpoint to redeem a paid lightning invoice to user's node. Only payee is authorized
+to redeem an invoice. Requires [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user that owns the invoice (payee) |
+| invoiceId | *string* | ID of the invoice to redeem |
+
+#### Body
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| paymentRequest | *string* | Payment request to redeem the invoice amount to |
+
+#### Returns
+
+Returns 200 OK if the invoice was successfully redeemed.
 
 ### Error handling
 

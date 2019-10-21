@@ -34,6 +34,7 @@
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
     "redis": "^2.8.0",
+    "redlock": "^4.0.0",
     "restify": "^8.4.0",
     "restify-errors": "^6.1.1",
     "secp256k1": "^3.7.1",

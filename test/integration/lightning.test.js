@@ -11,7 +11,8 @@ import {
   createUser,
   addContact,
   createLightningInvoice,
-  getLightningInvoice
+  getLightningInvoice,
+  redeemLightningInvoice
 } from './client';
 
 const wait = (ms) => {
@@ -213,7 +214,7 @@ describe('lightning', () => {
       });
   });
 
-  it('can get a lightning invoice where the external user is the payer', async () => {
+  it('can get a lightning invoice when the external user is the payer', async () => {
     const amount = '25000';
     const payee = users[0]; // Payee = the recipient of the payment
 
@@ -251,7 +252,7 @@ describe('lightning', () => {
     });
   });
 
-  it('cannot get a lightning invoice where the external user is not the payer', async () => {
+  it('cannot get a lightning invoice when the external user is not the payer', async () => {
     const amount = '25000';
     const payee = users[0]; // Payee = the recipient of the payment
 
@@ -300,7 +301,7 @@ describe('lightning', () => {
     });
   });
 
-  it('can get a lightning invoice where the internal user is the payee', async () => {
+  it('can get a lightning invoice when the internal user is the payee', async () => {
     const amount = '25000';
     const payee = users[0]; // Payee = the recipient of the payment
 
@@ -343,7 +344,7 @@ describe('lightning', () => {
     });
   });
 
-  it('cannot get a lightning invoice where the internal user is not the payee', async () => {
+  it('cannot get a lightning invoice when the internal user is not the payee', async () => {
     const amount = '25000';
     const payee = users[0]; // Payee = the recipient of the payment
 
@@ -386,6 +387,112 @@ describe('lightning', () => {
         })
         .catch(error => {
           if (!error.response || error.response.data.code !== 'Unauthorized') {
+            assert(false, error.message);
+          }
+        });
+    });
+  });
+
+  it('cannot redeem a lightning invoice when the internal user is not the payee', async () => {
+    const amount = '1500';
+    const payee = users[0]; // Payee = the recipient of the payment
+
+    const credentials = {
+      username: usernames[1],
+      mnemonic: mnemonics[1]
+    };
+
+    const message = {
+      version: 1,
+      type: 'ln_payment',
+      data: {}
+    };
+
+    const { encryptedMessage, signature } = await encryptPaymentMessage(
+      message,
+      bs58check.decode(payee.publicKey),
+      getKeyPairFromMnemonic(credentials.mnemonic)
+    );
+
+    const invoice = {
+      amount,
+      payee: payee.id,
+      paymentMessage: encryptedMessage,
+      paymentMessageSignature: signature
+    };
+
+    return createLightningInvoice(invoice, credentials, config.api.port).then(createdInvoice => {
+      const paymentRequest = 'fake-payment-request';
+
+      const unauthorizedCredentials = {
+        userId: users[2].id,
+        mnemonic: mnemonics[2]
+      };
+
+      return redeemLightningInvoice(
+        createdInvoice,
+        paymentRequest,
+        unauthorizedCredentials,
+        config.api.port
+      )
+        .then(() => {
+          assert(false, 'Managed to redeem invoice of another user');
+        })
+        .catch(error => {
+          if (!error.response || error.response.data.code !== 'NotFound') {
+            assert(false, error.message);
+          }
+        });
+    });
+  });
+
+  it('cannot redeem an unpaid lightning invoice', async () => {
+    const amount = '1500';
+    const payee = users[0]; // Payee = the recipient of the payment
+
+    const credentials = {
+      username: usernames[1],
+      mnemonic: mnemonics[1]
+    };
+
+    const message = {
+      version: 1,
+      type: 'ln_payment',
+      data: {}
+    };
+
+    const { encryptedMessage, signature } = await encryptPaymentMessage(
+      message,
+      bs58check.decode(payee.publicKey),
+      getKeyPairFromMnemonic(credentials.mnemonic)
+    );
+
+    const invoice = {
+      amount,
+      payee: payee.id,
+      paymentMessage: encryptedMessage,
+      paymentMessageSignature: signature
+    };
+
+    return createLightningInvoice(invoice, credentials, config.api.port).then(createdInvoice => {
+      const paymentRequest = 'lnsb15u1pw6uwcupp5rrtlst2g3kqr7ge68qv4lg3fax0e6hlksxs6sthz954v92z29eusdqqcqzpg9sqcygx8xyserlwfna995ytxy5en8r4pxjq9e6tr2wf5flqzzxkktw9zedfry6xt6zgckkrtnnzyxg8jymvpknzfvg4v6xwfmw5rc3cq0u03tl';
+
+      const payeeCredentials = {
+        userId: payee.id,
+        mnemonic: mnemonics[0]
+      };
+
+      return redeemLightningInvoice(
+        createdInvoice,
+        paymentRequest,
+        payeeCredentials,
+        config.api.port
+      )
+        .then(() => {
+          assert(false, 'Managed to redeem unpaid invoice');
+        })
+        .catch(error => {
+          if (!error.response || error.response.data.code !== 'Forbidden') {
             assert(false, error.message);
           }
         });
