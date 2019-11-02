@@ -15,7 +15,12 @@ export default class LndService {
     this._getSettleIndex()
       .then(settleIndex => {
         this._currentSettleIndex = settleIndex;
-        this._connect();
+
+        if (database.connected) {
+          return this._connect();
+        }
+
+        database.once('connect', () => this._connect());
       })
       .catch(error => {
         console.error('[LND] Unable to load settle index from redis:', error.message);

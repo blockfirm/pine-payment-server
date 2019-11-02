@@ -1,9 +1,14 @@
+import events from 'events';
 import Sequelize from 'sequelize';
+
 import models from './models';
 import defineRelations from './defineRelations';
 
-export default class DatabaseClient {
+export default class DatabaseClient extends events.EventEmitter {
   constructor(config) {
+    super();
+
+    this.connected = false;
     this.config = config;
     this._connect();
   }
@@ -34,6 +39,8 @@ export default class DatabaseClient {
       })
       .then(() => {
         console.log('[DB] ✅ Synced');
+        this.connected = true;
+        this.emit('connect');
       })
       .catch((error) => {
         console.error('[DB] 🔥 Error: ', error.message);
