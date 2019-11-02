@@ -183,6 +183,7 @@ If you are running the app from source you will need to configure and host your 
 | POST | [/v1/users/:userId/lightning/invoices](#post-v1usersuseridlightninginvoices) | Get a new lightning invoice for a user |
 | GET | [/v1/users/:userId/lightning/invoices/:invoiceId](#get-v1usersuseridlightninginvoicesinvoiceid) | Get status of an existing lightning invoice |
 | POST | [/v1/users/:userId/lightning/invoices/:invoiceId/redeem](#post-v1usersuseridlightninginvoicesinvoiceidredeem) | Redeem a paid lightning invoice |
+| GET | [/v1/users/:userId/lightning/capacity](#get-v1usersuseridlightningcapacity) | Get inbound lightning capacity for a contact |
 
 ### `GET` /v1/info
 
@@ -687,6 +688,24 @@ As JSON:
 #### Returns
 
 Returns 200 OK if the invoice was successfully redeemed.
+
+### `GET` /v1/users/:userId/lightning/capacity
+
+Endpoint to get inbound lightning capacity for a contact. Requires external [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to get inbound lightning capacity for |
+
+#### Returns
+
+As JSON:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| inbound | *string* | Inbound lightning capacity in satoshis |
 
 ### Error handling
 

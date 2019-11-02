@@ -11,6 +11,7 @@ import {
   createUser,
   addContact,
   createLightningInvoice,
+  getLightningCapacity,
   getLightningInvoice,
   redeemLightningInvoice
 } from './client';
@@ -497,5 +498,37 @@ describe('lightning', () => {
           }
         });
     });
+  });
+
+  it('can get inbound lightning capacity for a contact', async () => {
+    const contact = users[0];
+
+    const credentials = {
+      username: usernames[1],
+      mnemonic: mnemonics[1]
+    };
+
+    return getLightningCapacity(contact.id, credentials, config.api.port).then(capacity => {
+      assert(capacity.inbound, 'Missing inbound capacity');
+    });
+  });
+
+  it('cannot get inbound lightning capacity for a non-contact', async () => {
+    const contact = users[0];
+
+    const credentials = {
+      username: usernames[2],
+      mnemonic: mnemonics[2]
+    };
+
+    return getLightningCapacity(contact.id, credentials, config.api.port)
+      .then(() => {
+        assert(false, 'Managed to get inbound capacity for a non-contact');
+      })
+      .catch(error => {
+        if (!error.response || error.response.data.code !== 'Unauthorized') {
+          assert(false, error.message);
+        }
+      });
   });
 });

@@ -11,6 +11,9 @@
   "extends": [
     "eslint:recommended"
   ],
+  "globals": {
+    "BigInt": true
+  },
   "rules": {
     "eqeqeq": ["error", "smart"],
     "no-else-return": "error",

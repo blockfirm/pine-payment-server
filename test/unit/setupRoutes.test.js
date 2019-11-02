@@ -191,9 +191,16 @@ describe('setupRoutes.js', () => {
       assert(fakeServer.post.calledWithMatch('/v1/users/:userId/lightning/invoices/:invoiceId/redeem'));
     });
 
+    it('registers the route GET /v1/users/:userId/lightning/capacity', () => {
+      setupRoutes(fakeServer);
+
+      assert(fakeServer.get.called);
+      assert(fakeServer.get.calledWithMatch('/v1/users/:userId/lightning/capacity'));
+    });
+
     it('wraps each endpoint with wrapEndpoint()', () => {
       setupRoutes(fakeServer);
-      assert.equal(wrapEndpointSpy.callCount, 23);
+      assert.equal(wrapEndpointSpy.callCount, 24);
     });
   });
 });
