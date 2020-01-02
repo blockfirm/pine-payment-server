@@ -4,7 +4,8 @@ const get = function get(request, response) {
 
     response.send({
       isOpenForRegistrations: config.server.isOpenForRegistrations,
-      network: config.bitcoin.network
+      network: config.bitcoin.network,
+      lightning: config.lightning.enabled
     });
   });
 };

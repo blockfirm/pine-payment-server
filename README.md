@@ -195,6 +195,7 @@ Returns information about the server.
 {
     "isOpenForRegistrations": true, (bool) Whether or not the server is open for registrations
     "network": "mainnet", (string) Bitcoin network the server has been configured to be used with
+    "lightning": false (bool) Whether or not the server supports lightning payments
 }
 ```
 

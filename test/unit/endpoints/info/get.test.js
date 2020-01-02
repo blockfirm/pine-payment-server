@@ -23,6 +23,9 @@ describe('endpoints/info/get.js', () => {
           },
           bitcoin: {
             network: 'mainnet'
+          },
+          lightning: {
+            enabled: false
           }
         }
       };
@@ -55,6 +58,15 @@ describe('endpoints/info/get.js', () => {
       return returnedPromise.then(() => {
         assert(fakeResponse.send.called);
         assert(fakeResponse.send.calledWithMatch({ network: 'mainnet' }));
+      });
+    });
+
+    it('responds with an object with lightning set to false', () => {
+      const returnedPromise = infoEndpoints.get.call(fakeContext, fakeRequest, fakeResponse);
+
+      return returnedPromise.then(() => {
+        assert(fakeResponse.send.called);
+        assert(fakeResponse.send.calledWithMatch({ lightning: false }));
       });
     });
   });
