@@ -141,7 +141,7 @@ This is the only way if you just want to host your own Pine Payment Server but s
 
 1. Open `src/config.js`
 2. Make sure `notifications.webhook` is set to Pine's official Notification Service (default)
-3. Request an API key from Pine (coming soon) and enter it in `notifications.apiKey`
+3. Request an API key from Pine (email hi@pine.pm) and enter it in `notifications.apiKey`
 4. Build and restart the server
 
 ### Send notifications to your own app
