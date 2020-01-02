@@ -1,7 +1,10 @@
 const get = function get(request, response) {
   return Promise.resolve().then(() => {
+    const { config } = this;
+
     response.send({
-      isOpenForRegistrations: this.config.server.isOpenForRegistrations
+      isOpenForRegistrations: config.server.isOpenForRegistrations,
+      network: config.bitcoin.network
     });
   });
 };

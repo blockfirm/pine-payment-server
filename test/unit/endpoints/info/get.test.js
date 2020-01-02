@@ -20,6 +20,9 @@ describe('endpoints/info/get.js', () => {
         config: {
           server: {
             isOpenForRegistrations: true
+          },
+          bitcoin: {
+            network: 'mainnet'
           }
         }
       };
@@ -37,12 +40,21 @@ describe('endpoints/info/get.js', () => {
       assert(returnedPromise instanceof Promise);
     });
 
-    it('calls response.send() with an object with isOpenForRegistrations as true', () => {
+    it('responds with an object with isOpenForRegistrations set to true', () => {
       const returnedPromise = infoEndpoints.get.call(fakeContext, fakeRequest, fakeResponse);
 
       return returnedPromise.then(() => {
         assert(fakeResponse.send.called);
         assert(fakeResponse.send.calledWithMatch({ isOpenForRegistrations: true }));
+      });
+    });
+
+    it('responds with an object with network set to "mainnet"', () => {
+      const returnedPromise = infoEndpoints.get.call(fakeContext, fakeRequest, fakeResponse);
+
+      return returnedPromise.then(() => {
+        assert(fakeResponse.send.called);
+        assert(fakeResponse.send.calledWithMatch({ network: 'mainnet' }));
       });
     });
   });
