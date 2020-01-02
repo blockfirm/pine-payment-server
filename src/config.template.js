@@ -50,7 +50,7 @@ const config = {
     port: 6379
   },
   notifications: {
-    webhook: 'http://localhost:50427/v1/notifications',
+    webhook: 'https://notifications.pine.pm/v1/notifications',
     apiKey: '',
     queue: {
       attempts: 10,
