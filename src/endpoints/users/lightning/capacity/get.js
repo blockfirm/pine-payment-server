@@ -1,7 +1,11 @@
 import errors from 'restify-errors';
 
-const validateRequest = (request) => {
+const validateRequest = (request, config) => {
   const { userId } = request.params;
+
+  if (!config.lightning.enabled) {
+    throw new errors.NotImplementedError('Lightning is not supported by this server');
+  }
 
   if (!userId || typeof userId !== 'string') {
     throw new errors.BadRequestError('The userId parameter must be a string');
@@ -45,10 +49,10 @@ const getUnredeemedInvoices = async (userId, database) => {
 };
 
 const get = async function get(request, response) {
-  const { database, redis } = this;
+  const { database, redis, config } = this;
   const { userId } = request.params;
 
-  validateRequest(request);
+  validateRequest(request, config);
 
   const user = await getUser(userId, database);
 

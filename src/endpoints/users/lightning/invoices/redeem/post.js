@@ -6,8 +6,12 @@ const getInvoiceLockKey = (invoiceId) => (
   `pine:lightning:invoice:${invoiceId}:lock`
 );
 
-const validateRequest = (request) => {
+const validateRequest = (request, config) => {
   const { userId, invoiceId, paymentRequest } = request.params;
+
+  if (!config.lightning.enabled) {
+    throw new errors.NotImplementedError('Lightning is not supported by this server');
+  }
 
   if (!userId || typeof userId !== 'string') {
     throw new errors.BadRequestError('The userId parameter must be a string');
@@ -46,7 +50,7 @@ const validatePaymentRequest = async (invoice, paymentRequest, lndGateway) => {
 const post = async function post(request, response) {
   const { userId, invoiceId, paymentRequest } = request.params;
 
-  validateRequest(request);
+  validateRequest(request, this.config);
 
   const user = await this.database.user.findOne({
     where: { id: userId }

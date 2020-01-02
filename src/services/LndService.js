@@ -12,6 +12,10 @@ export default class LndService {
     this.redis = redis;
     this.notifications = notifications;
 
+    if (!config.enabled) {
+      return;
+    }
+
     this._getSettleIndex()
       .then(settleIndex => {
         this._currentSettleIndex = settleIndex;
@@ -29,7 +33,7 @@ export default class LndService {
   }
 
   _connect() {
-    const { rpcHost, macaroon } = this.config;
+    const { rpcHost, macaroon } = this.config.gateway;
 
     const options = {
       server: rpcHost,

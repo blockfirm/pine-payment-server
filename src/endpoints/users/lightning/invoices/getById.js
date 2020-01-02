@@ -1,7 +1,11 @@
 import errors from 'restify-errors';
 
-const validateRequest = (request) => {
+const validateRequest = (request, config) => {
   const { userId, id } = request.params;
+
+  if (!config.lightning.enabled) {
+    throw new errors.NotImplementedError('Lightning is not supported by this server');
+  }
 
   if (!userId || typeof userId !== 'string') {
     throw new errors.BadRequestError('The userId parameter must be a string');
@@ -25,7 +29,7 @@ const validateRequest = (request) => {
 const getById = async function getById(request, response) {
   const { userId, id } = request.params;
 
-  validateRequest(request);
+  validateRequest(request, this.config);
 
   const user = await this.database.user.findOne({
     where: { id: userId }

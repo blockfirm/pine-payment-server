@@ -32,7 +32,7 @@ const getContact = async (address, userId, database) => {
 
 // eslint-disable-next-line max-statements
 const post = async function post(request, response) {
-  const { database, lndGateway } = this;
+  const { database, lndGateway, config } = this;
 
   const {
     userId,
@@ -40,6 +40,10 @@ const post = async function post(request, response) {
     paymentMessage,
     paymentMessageSignature
   } = request.params;
+
+  if (!config.lightning.enabled) {
+    throw new errors.NotImplementedError('Lightning is not supported by this server');
+  }
 
   if (!userId || typeof userId !== 'string') {
     throw new errors.BadRequestError('The userId parameter must be a string');
