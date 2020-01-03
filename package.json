@@ -1,6 +1,6 @@
 {
   "name": "pine-payment-server",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0",
   "description": "Implementation of the Pine Payment Protocol.",
   "main": "src/server.js",
   "scripts": {
