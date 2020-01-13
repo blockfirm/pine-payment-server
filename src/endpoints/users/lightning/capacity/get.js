@@ -64,9 +64,8 @@ const get = async function get(request, response) {
     return sum + invoice.paidAmount;
   }, 0);
 
-  const capacity = await redis.get(`pine:lightning:user:${user.id}:channel:capacity`);
-  const localBalance = await redis.get(`pine:lightning:user:${user.id}:channel:local-balance`);
-  const inbound = BigInt(capacity || 0) - BigInt(localBalance || 0) - BigInt(pendingRedemption);
+  const remoteBalance = await redis.get(`pine:lightning:user:${user.id}:channel:remote-balance`);
+  const inbound = BigInt(remoteBalance || 0) - BigInt(pendingRedemption);
 
   response.send({
     inbound: inbound > 0 ? inbound.toString() : '0'
