@@ -1,0 +1,13 @@
+require('@babel/register')({
+  presets: ['@babel/preset-env']
+});
+
+const path = require('path');
+const DATABASE_PATH = 'src/database';
+
+module.exports = {
+  'config': path.resolve(DATABASE_PATH, 'config/config.js'),
+  'migrations-path': path.resolve(DATABASE_PATH, 'migrations'),
+  'seeders-path': path.resolve(DATABASE_PATH, 'seeders'),
+  'models-path': path.resolve(DATABASE_PATH, 'models')
+};

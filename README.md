@@ -31,6 +31,7 @@ a decentralized, secure and private manner.
 * [Testing](#testing)
   * [Unit tests](#unit-tests)
   * [Integration tests](#integration-tests)
+* [Upgrading](#upgrading)
 * [Contributing](#contributing)
 * [Licensing](#licensing)
 
@@ -783,6 +784,17 @@ To run the integration tests, run the following command:
 ```
 $ npm run test-it
 ```
+
+## Upgrading
+
+To upgrade an existing server instance, run the following commands. Please note that you should
+back up your database before performing the upgrade.
+
+1. `cd pine-payment-server/`
+2. `git pull`
+3. `npm install`
+4. `npx sequelize-cli db:migrate`
+5. Restart the server
 
 ## Contributing
 
