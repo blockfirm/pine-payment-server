@@ -1,5 +1,9 @@
 import errors from 'restify-errors';
 
+const getUnixTimestamp = (date) => {
+  return Math.floor(date.getTime() / 1000);
+};
+
 const validateRequest = (request, config) => {
   const { userId, id } = request.params;
 
@@ -58,9 +62,9 @@ const getById = async function getById(request, response) {
     payer: invoice.payer,
     paid: invoice.paid,
     paidAmount: invoice.paidAmount,
-    paidAt: invoice.paidAt,
+    paidAt: getUnixTimestamp(invoice.paidAt),
     redeemed: invoice.redeemed,
-    redeemedAt: invoice.redeemedAt
+    redeemedAt: getUnixTimestamp(invoice.redeemedAt)
   });
 };
 

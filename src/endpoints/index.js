@@ -8,6 +8,7 @@ import * as usersAddress from './users/address';
 import * as usersAddressUsed from './users/address/used';
 import * as usersMessages from './users/messages';
 import * as usersLightningInvoices from './users/lightning/invoices';
+import * as usersLightningInvoicesUnredeemed from './users/lightning/invoices/unredeemed';
 import * as usersLightningInvoicesRedeem from './users/lightning/invoices/redeem';
 import * as usersLightningCapacity from './users/lightning/capacity';
 
@@ -22,6 +23,7 @@ const endpoints = {
   '/users/:userId/address/used': usersAddressUsed,
   '/users/:userId/messages': usersMessages,
   '/users/:userId/lightning/invoices': usersLightningInvoices,
+  '/users/:userId/lightning/invoices/unredeemed': usersLightningInvoicesUnredeemed,
   '/users/:userId/lightning/invoices/:invoiceId/redeem': usersLightningInvoicesRedeem,
   '/users/:userId/lightning/capacity': usersLightningCapacity
 };

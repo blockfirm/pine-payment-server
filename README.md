@@ -182,6 +182,7 @@ If you are running the app from source you will need to configure and host your 
 | POST | [/v1/users/:userId/messages](#post-v1usersuseridmessages) | Send a message to a user |
 | DELETE | [/v1/users/:userId/messages/:messageId](#delete-v1usersuseridmessagesmessageid) | Remove a message |
 | POST | [/v1/users/:userId/lightning/invoices](#post-v1usersuseridlightninginvoices) | Get a new lightning invoice for a user |
+| GET | [/v1/users/:userId/lightning/invoices/unredeemed](#get-v1usersuseridlightninginvoicesunredeemed) | Get all unredeemed lightning invoices for a user |
 | GET | [/v1/users/:userId/lightning/invoices/:invoiceId](#get-v1usersuseridlightninginvoicesinvoiceid) | Get status of an existing lightning invoice |
 | POST | [/v1/users/:userId/lightning/invoices/:invoiceId/redeem](#post-v1usersuseridlightninginvoicesinvoiceidredeem) | Redeem a paid lightning invoice |
 | GET | [/v1/users/:userId/lightning/capacity](#get-v1usersuseridlightningcapacity) | Get inbound lightning capacity for a contact |
@@ -641,6 +642,30 @@ As JSON:
 | id | *string* | The ID of the created invoice |
 | amount | *string* | The specified invoice amount in satoshis |
 | paymentRequest | *string* | Lightning payment request |
+
+### `GET` /v1/users/:userId/lightning/invoices/unredeemed
+
+Endpoint to get all unredeemed lightning invoices for a user. Requires [authentication](#authentication).
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| userId | *string* | ID of the user to get unredeemed invoices for |
+
+#### Returns
+
+A JSON array of:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | *string* | The ID of the invoice |
+| payer | *string* | Pine address of the user who paid the invoice |
+| paid | *boolean* | Whether the invoice has been paid (`true`) |
+| paidAmount | *string* | The amount that was paid in satoshis |
+| paidAt | *number* | When the invoice was paid (unix timestamp) |
+| redeemed | *boolean* | Whether the invoice has been redeemed (`false`) |
+| redeemedAt | *number* | When the invoice was redeemed by its payee (unix timestamp) |
 
 ### `GET` /v1/users/:userId/lightning/invoices/:invoiceId
 
