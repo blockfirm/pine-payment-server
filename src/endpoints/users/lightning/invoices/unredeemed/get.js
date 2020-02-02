@@ -1,7 +1,9 @@
 import errors from 'restify-errors';
 
 const getUnixTimestamp = (date) => {
-  return Math.floor(date.getTime() / 1000);
+  if (date) {
+    return Math.floor(date.getTime() / 1000);
+  }
 };
 
 const validateRequest = (request, config) => {
