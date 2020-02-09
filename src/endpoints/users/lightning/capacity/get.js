@@ -44,7 +44,11 @@ const getContact = async (address, userId, database) => {
 
 const getUnredeemedInvoices = async (userId, database) => {
   return await database.invoice.findAll({
-    where: { userId, redeemed: false }
+    where: {
+      userId,
+      paid: true,
+      redeemed: false
+    }
   });
 };
 

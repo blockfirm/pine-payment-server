@@ -42,7 +42,11 @@ const get = async function get(request, response) {
   }
 
   const invoiceQuery = {
-    where: { userId, redeemed: false }
+    where: {
+      userId,
+      paid: true,
+      redeemed: false
+    }
   };
 
   return this.database.invoice.findAll(invoiceQuery)
