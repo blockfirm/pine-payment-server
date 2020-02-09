@@ -23,8 +23,8 @@ const endpoints = {
   '/users/:userId/address/used': usersAddressUsed,
   '/users/:userId/messages': usersMessages,
   '/users/:userId/lightning/invoices': usersLightningInvoices,
-  '/users/:userId/lightning/invoices/unredeemed': usersLightningInvoicesUnredeemed,
   '/users/:userId/lightning/invoices/:invoiceId/redeem': usersLightningInvoicesRedeem,
+  '/users/:userId/lightning/invoices/unredeemed': usersLightningInvoicesUnredeemed,
   '/users/:userId/lightning/capacity': usersLightningCapacity
 };
 
