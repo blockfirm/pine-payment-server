@@ -65,11 +65,11 @@ const get = async function get(request, response) {
   const invoices = await getUnredeemedInvoices(user.id, database);
 
   const pendingRedemption = invoices.reduce((sum, invoice) => {
-    return sum + invoice.paidAmount;
-  }, 0);
+    return sum + BigInt(invoice.paidAmount);
+  }, BigInt(0));
 
   const remoteBalance = await redis.get(`pine:lightning:user:${user.id}:channel:remote-balance`);
-  const inbound = BigInt(remoteBalance || 0) - BigInt(pendingRedemption);
+  const inbound = BigInt(remoteBalance || 0) - pendingRedemption;
 
   response.send({
     inbound: inbound > 0 ? inbound.toString() : '0'
