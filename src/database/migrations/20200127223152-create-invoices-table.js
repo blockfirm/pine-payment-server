@@ -56,7 +56,7 @@ module.exports = {
       messageId: {
         type: Sequelize.DataTypes.UUID,
         references: {
-          model: 'invoices',
+          model: 'messages',
           key: 'id'
         },
         allowNull: true
