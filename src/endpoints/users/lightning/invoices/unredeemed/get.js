@@ -53,6 +53,7 @@ const get = async function get(request, response) {
     .then((invoices) => {
       return invoices.map((invoice) => ({
         id: invoice.id,
+        messageId: invoice.messageId,
         payer: invoice.payer,
         paid: invoice.paid,
         paidAmount: invoice.paidAmount,

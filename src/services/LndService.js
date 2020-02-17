@@ -121,28 +121,33 @@ export default class LndService {
 
     await dbInvoice.save({ fields: ['paid', 'paidAmount', 'paidAt'] });
 
-    await this._sendMessage({
+    const message = await this._createMessage({
       from: dbInvoice.payer,
       userId: dbInvoice.userId,
       encryptedMessage: dbInvoice.paymentMessage,
-      signature: dbInvoice.paymentMessageSignature,
-      invoiceId: dbInvoice.id
+      signature: dbInvoice.paymentMessageSignature
     });
+
+    await message.setInvoice(dbInvoice);
+
+    this._notify(message);
 
     await this._setSettleIndex(settleIndex);
 
-    console.log(`[LND] Invoice paid (id: ${dbInvoice.id})`);
+    console.log(`[LND] Invoice paid (id: ${dbInvoice.id}, message-id: ${message.id})`);
   }
 
-  async _sendMessage(message) {
-    const { database, notifications } = this;
-    const createdMessage = await database.message.create(message);
+  async _createMessage(message) {
+    const { database } = this;
+    return await database.message.create(message);
+  }
+
+  _notify(message) {
+    const { notifications } = this;
 
     notifications.notify(message.userId, notifications.INCOMING_PAYMENT, {
       address: message.from
     });
-
-    return createdMessage;
   }
 
   async getInvoice(amount, memo) {

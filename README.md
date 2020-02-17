@@ -660,6 +660,7 @@ A JSON array of:
 | Name | Type | Description |
 | --- | --- | --- |
 | id | *string* | The ID of the invoice |
+| messageId | *string* | ID of the payment message that was triggered by this invoice |
 | payer | *string* | Pine address of the user who paid the invoice |
 | paid | *boolean* | Whether the invoice has been paid (`true`) |
 | paidAmount | *string* | The amount that was paid in satoshis |
