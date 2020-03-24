@@ -1,4 +1,5 @@
 import errors from 'restify-errors';
+import { getChannelProperty } from '../../database/lightning';
 
 const getById = function getById(request, response) {
   const params = request.params;
@@ -21,17 +22,20 @@ const getById = function getById(request, response) {
     };
 
     return this.database.user.findOne(query)
-      .then((user) => {
+      .then(async (user) => {
         if (!user) {
           throw new errors.NotFoundError('User not found');
         }
+
+        const lightningCapacity = await getChannelProperty(this.redis, user.id, 'capacity');
 
         response.send({
           id: user.id,
           publicKey: user.publicKey,
           username: user.username,
           displayName: user.displayName,
-          avatar: user.avatar
+          avatar: user.avatar,
+          hasLightningCapacity: lightningCapacity > 0
         });
       });
   });

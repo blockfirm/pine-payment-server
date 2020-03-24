@@ -1,4 +1,5 @@
 import errors from 'restify-errors';
+import { getChannelProperty } from '../../../../database/lightning';
 
 const validateRequest = (request, config) => {
   const { userId } = request.params;
@@ -68,7 +69,7 @@ const get = async function get(request, response) {
     return sum + BigInt(invoice.paidAmount);
   }, BigInt(0));
 
-  const remoteBalance = await redis.get(`pine:lightning:user:${user.id}:channel:remote-balance`);
+  const remoteBalance = await getChannelProperty(redis, user.id, 'remote-balance');
   const inbound = BigInt(remoteBalance || 0) - pendingRedemption;
 
   response.send({

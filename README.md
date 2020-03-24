@@ -222,7 +222,8 @@ Endpoint to search for users by username.
         "displayName": "", (string) Display name of the user
         "avatar": { (object) Metadata about the user's avatar. Null if the user doesn't have any
             "checksum": "" (string) A checksum of the image
-        }
+        },
+        "hasLightningCapacity": true (boolean) Whether the user has any kind of lightning capacity
     },
     ...
 ]
@@ -262,7 +263,8 @@ Endpoint to get a user by ID.
     "displayName": "", (string) Display name of the user
     "avatar": { (object) Metadata about the user's avatar. Null if the user doesn't have any
         "checksum": "" (string) A checksum of the image
-    }
+    },
+    "hasLightningCapacity": true (boolean) Whether the user has any kind of lightning capacity
 }
 ```
 

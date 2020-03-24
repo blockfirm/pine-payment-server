@@ -1,4 +1,5 @@
 import errors from 'restify-errors';
+import { getChannelProperty } from '../../database/lightning';
 
 const getUsernamesFromParam = (usernameParam) => {
   let usernames = usernameParam.split(',');
@@ -44,12 +45,17 @@ const get = function get(request, response) {
 
     return this.database.user.findAll(query)
       .then((users) => {
-        return users.map((user) => ({
-          id: user.id,
-          publicKey: user.publicKey,
-          username: user.username,
-          displayName: user.displayName,
-          avatar: user.avatar
+        return Promise.all(users.map(async (user) => {
+          const lightningCapacity = await getChannelProperty(this.redis, user.id, 'capacity');
+
+          return {
+            id: user.id,
+            publicKey: user.publicKey,
+            username: user.username,
+            displayName: user.displayName,
+            avatar: user.avatar,
+            hasLightningCapacity: lightningCapacity > 0
+          };
         }));
       })
       .then((users) => {
