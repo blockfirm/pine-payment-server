@@ -65,7 +65,10 @@ const config = {
     gateway: {
       rpcHost: 'localhost:10002',
       macaroon: '~/.lnd/data/chain/bitcoin/simnet/admin.macaroon'
-    }
+    },
+
+    // How many percent of the total channel capacity is reserved for fees.
+    percentCapacityReservedForFees: 2
   }
 };
 

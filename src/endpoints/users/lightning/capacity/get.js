@@ -53,9 +53,18 @@ const getUnredeemedInvoices = async (userId, database) => {
   });
 };
 
+const getReservedCapacity = (totalCapacity, percentCapacityReservedForFees) => {
+  if (!totalCapacity || !percentCapacityReservedForFees) {
+    return BigInt(0);
+  }
+
+  return BigInt(totalCapacity) * BigInt(percentCapacityReservedForFees) / BigInt(100);
+};
+
 const get = async function get(request, response) {
   const { database, redis, config } = this;
   const { userId } = request.params;
+  const { percentCapacityReservedForFees } = config.lightning;
 
   validateRequest(request, config);
 
@@ -69,8 +78,10 @@ const get = async function get(request, response) {
     return sum + BigInt(invoice.paidAmount);
   }, BigInt(0));
 
+  const capacity = await getChannelProperty(redis, user.id, 'capacity');
+  const reservedCapacity = getReservedCapacity(capacity, percentCapacityReservedForFees);
   const remoteBalance = await getChannelProperty(redis, user.id, 'remote-balance');
-  const inbound = BigInt(remoteBalance || 0) - pendingRedemption;
+  const inbound = BigInt(remoteBalance || 0) - pendingRedemption - reservedCapacity;
 
   response.send({
     inbound: inbound > 0 ? inbound.toString() : '0'
