@@ -10,7 +10,7 @@ const handleError = (error, response) => {
 
   response.send(status, { code, message });
 
-  console.error(`[API] ⛔️ ${status} ${message}`);
+  console.error(`[API] ERROR ${status} ${code}: ${error.message}`);
 };
 
 export default handleError;
