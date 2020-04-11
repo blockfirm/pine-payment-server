@@ -11,6 +11,8 @@ change the way transactions are made or stored on the bitcoin network and blockc
 anonymous user profiles and the exchange of bitcoin addresses and signed end-to-end encrypted transactions in
 a decentralized, secure and private manner.
 
+<img src="docs/pine-payment-protocol.png">
+
 ## Table of Contents
 
 * [Dependencies](#dependencies)
