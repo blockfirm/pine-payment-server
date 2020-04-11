@@ -54,15 +54,20 @@ describe('handleError.js', () => {
       assert(fakeResponse.send.calledWith(errorStatus, { code: 'Error', message: errorMessage }));
     });
 
-    describe('when error.status is undefined', () => {
-      it('defaults to 500', () => {
+    describe('when error.statusCode is undefined', () => {
+      it('defaults to 500 with code InternalServerError and a generic error message', () => {
         const errorMessage = '73428bc4-e34e-4e67-8acf-b92c866e7f9c';
         const error = new Error(errorMessage);
+
+        const expectedResponse = {
+          code: 'InternalServerError',
+          message: 'An unexpected error occurred on the server'
+        };
 
         handleError(error, fakeResponse);
 
         assert(fakeResponse.send.calledOnce);
-        assert(fakeResponse.send.calledWith(500));
+        assert(fakeResponse.send.calledWith(500, expectedResponse));
       });
     });
 
@@ -70,10 +75,12 @@ describe('handleError.js', () => {
       it('defaults to "Unknown error"', () => {
         const error = new Error();
 
+        error.statusCode = 418;
+
         handleError(error, fakeResponse);
 
         assert(fakeResponse.send.calledOnce);
-        assert(fakeResponse.send.calledWith(500, { code: 'Error', message: 'Unknown error' }));
+        assert(fakeResponse.send.calledWith(418, { code: 'Error', message: 'Unknown error' }));
       });
     });
   });

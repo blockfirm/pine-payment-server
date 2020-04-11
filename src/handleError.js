@@ -1,7 +1,12 @@
 const handleError = (error, response) => {
   const status = error.statusCode || 500;
-  const code = error.code || 'Error';
-  const message = error.message || 'Unknown error';
+  let code = error.code || 'Error';
+  let message = error.message || 'Unknown error';
+
+  if (status === 500) {
+    code = 'InternalServerError';
+    message = 'An unexpected error occurred on the server';
+  }
 
   response.send(status, { code, message });
 
