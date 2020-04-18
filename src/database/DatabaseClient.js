@@ -1,6 +1,7 @@
 import events from 'events';
 import Sequelize from 'sequelize';
 
+import logger from '../logger';
 import models from './models';
 import defineRelations from './defineRelations';
 
@@ -10,14 +11,24 @@ export default class DatabaseClient extends events.EventEmitter {
 
     this.connected = false;
     this.config = config;
-    this._connect();
+    this.logger = logger.child({ scope: 'DatabaseClient' });
+
+    this._tryConnect();
+  }
+
+  _tryConnect() {
+    try {
+      this._connect();
+    } catch (error) {
+      this.logger.error(`Unable to connect to database: ${error.message}`);
+    }
   }
 
   _connect() {
     const config = this.config;
 
     if (!config || !config.host) {
-      return;
+      throw new Error('Missing database configuration');
     }
 
     this.sequelize = new Sequelize(config.database, config.username, config.password, {
@@ -30,7 +41,7 @@ export default class DatabaseClient extends events.EventEmitter {
 
     this.sequelize.authenticate()
       .then(() => {
-        console.log('[DB] ✅ Connected');
+        this.logger.info(`Connected to database at ${config.host}`);
       })
       .then(() => {
         const definedModels = this._defineModels();
@@ -38,12 +49,12 @@ export default class DatabaseClient extends events.EventEmitter {
         return this._sync();
       })
       .then(() => {
-        console.log('[DB] ✅ Synced');
+        this.logger.info('Database was successfully synced');
         this.connected = true;
         this.emit('connect');
       })
       .catch((error) => {
-        console.error('[DB] 🔥 Error: ', error.message);
+        this.logger.error(`Database error: ${error.message}`);
       });
   }
 

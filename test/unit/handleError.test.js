@@ -1,10 +1,13 @@
 import assert from 'assert';
 import sinon from 'sinon';
+
+import logger from '../../src/logger';
 import handleError from '../../src/handleError';
 
 describe('handleError.js', () => {
-  describe('handleError(error, response)', () => {
+  describe('handleError(error, response, next)', () => {
     let fakeResponse;
+    let fakeNext;
 
     beforeEach(() => {
       fakeResponse = {
@@ -12,32 +15,31 @@ describe('handleError.js', () => {
         send: sinon.spy()
       };
 
-      sinon.stub(console, 'error');
+      fakeNext = sinon.spy();
+      sinon.stub(logger, 'error');
     });
 
     afterEach(() => {
-      console.error.restore();
+      logger.error.restore();
     });
 
-    it('accepts two arguments', () => {
+    it('accepts three arguments', () => {
       const actual = handleError.length;
-      const expected = 2;
+      const expected = 3;
 
       assert.equal(actual, expected);
     });
 
-    it('logs the error status and message using console.error()', () => {
-      const errorStatus = 404;
+    it('logs unexpected errors', () => {
       const errorMessage = 'bacd8b78-cb98-43e0-8600-63bc6e88a8af';
       const error = new Error(errorMessage);
 
-      error.statusCode = errorStatus;
-      handleError(error, fakeResponse);
+      handleError(error, fakeResponse, fakeNext);
 
-      const firstArgument = console.error.getCall(0).args[0];
+      const firstArgument = logger.error.getCall(0).args[0];
 
-      assert(console.error.calledOnce);
-      assert(firstArgument.indexOf(errorStatus) > -1);
+      assert(logger.error.calledOnce);
+      assert(firstArgument.indexOf('500') > -1);
       assert(firstArgument.indexOf(errorMessage) > -1);
     });
 
@@ -48,10 +50,16 @@ describe('handleError.js', () => {
 
       error.statusCode = errorStatus;
 
-      handleError(error, fakeResponse);
+      handleError(error, fakeResponse, fakeNext);
 
       assert(fakeResponse.send.calledOnce);
       assert(fakeResponse.send.calledWith(errorStatus, { code: 'Error', message: errorMessage }));
+    });
+
+    it('calls next()', () => {
+      const error = new Error();
+      handleError(error, fakeResponse, fakeNext);
+      assert(fakeNext.calledOnce);
     });
 
     describe('when error.statusCode is undefined', () => {
@@ -64,7 +72,7 @@ describe('handleError.js', () => {
           message: 'An unexpected error occurred on the server'
         };
 
-        handleError(error, fakeResponse);
+        handleError(error, fakeResponse, fakeNext);
 
         assert(fakeResponse.send.calledOnce);
         assert(fakeResponse.send.calledWith(500, expectedResponse));
@@ -77,7 +85,7 @@ describe('handleError.js', () => {
 
         error.statusCode = 418;
 
-        handleError(error, fakeResponse);
+        handleError(error, fakeResponse, fakeNext);
 
         assert(fakeResponse.send.calledOnce);
         assert(fakeResponse.send.calledWith(418, { code: 'Error', message: 'Unknown error' }));

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import errors from 'restify-errors';
 
+import logger from '../logger';
 import { parse as parseAddress, resolveBaseUrl } from '../address';
 import verify from '../crypto/verify';
 
@@ -33,7 +34,10 @@ const getExternalUser = (address) => {
       return user;
     })
     .catch((error) => {
-      console.error('[AUTH] 🔥 Error getting external user:', error.message);
+      logger.error(`Error when getting external user: ${error.message}`, {
+        scope: 'Api',
+        pineAddress: address
+      });
     });
 };
 

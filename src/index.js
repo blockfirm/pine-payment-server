@@ -1,20 +1,21 @@
 import Server from './Server';
 import config from './config';
+import logger from './logger';
 
 const server = new Server(config);
 
 server.start();
 
 const onExit = () => {
-  console.log('Gracefully shutting down...');
+  logger.info('Gracefully shutting down...');
 
   server.stop()
     .then(() => {
-      console.log('Graceful shutdown completed');
+      logger.info('Graceful shutdown completed');
       return 0;
     })
     .catch(error => {
-      console.log('Graceful shutdown failed with error:', error.message);
+      logger.error(`Graceful shutdown failed with error: ${error.message}`);
       return 1;
     })
     .then(code => {

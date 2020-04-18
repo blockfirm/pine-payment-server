@@ -8,6 +8,9 @@ const config = {
       xff: false,
       maxKeys: 100000
     }
+  },
+  log: {
+    level: 'info'
   }
 };
 

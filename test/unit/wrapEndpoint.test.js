@@ -2,9 +2,14 @@ import proxyquire from 'proxyquire';
 import assert from 'assert';
 import sinon from 'sinon';
 
+import winstonMock from './mocks/winston.mock';
+import winstonDailyRotateFileMock from './mocks/winstonDailyRotateFile.mock';
+
 const handleErrorSpy = sinon.spy();
 
 const wrapEndpoint = proxyquire('../../src/wrapEndpoint', {
+  'winston': { ...winstonMock, '@noCallThru': true, '@global': true },
+  'winston-daily-rotate-file': winstonDailyRotateFileMock,
   './handleError': { default: handleErrorSpy }
 }).default;
 
@@ -68,6 +73,18 @@ describe('wrapEndpoint.js', () => {
         assert.strictEqual(fakeEndpoint.thisValues[0], fakeThisArg);
       });
 
+      it('calls next() once the endpoint resolves', (done) => {
+        const fakeNext = sinon.spy();
+        const fakeEndpoint = () => Promise.resolve();
+        const fakeThisArg = {};
+        const returnedFunction = wrapEndpoint(fakeEndpoint, fakeThisArg);
+
+        returnedFunction(null, null, fakeNext).then(() => {
+          assert(fakeNext.calledOnce);
+          done();
+        });
+      });
+
       describe('when the endpoint rejects the returned promise', () => {
         let fakeError;
         let fakeEndpoint;
@@ -98,7 +115,7 @@ describe('wrapEndpoint.js', () => {
         it('calls handleError with the error and second argument from the returned function', () => {
           return returnedPromise.then(() => {
             assert(handleErrorSpy.calledOnce);
-            assert(handleErrorSpy.calledWithExactly(fakeError, argument2));
+            assert(handleErrorSpy.calledWithExactly(fakeError, argument2, argument3));
           });
         });
 
@@ -137,7 +154,7 @@ describe('wrapEndpoint.js', () => {
 
         it('calls handleError with the error and second argument from the returned function', () => {
           assert(handleErrorSpy.calledOnce);
-          assert(handleErrorSpy.calledWithExactly(fakeError, argument2));
+          assert(handleErrorSpy.calledWithExactly(fakeError, argument2, argument3));
         });
 
         it('calls handleError with "thisArg" as "this"', () => {

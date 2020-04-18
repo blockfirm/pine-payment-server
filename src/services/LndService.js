@@ -1,5 +1,6 @@
 /* eslint-disable camelcase, max-lines */
 import createLnrpc from 'lnrpc';
+import logger from '../logger';
 
 const SUBSCRIPTION_REOPEN_DELAY = 2000; // 2s
 const SETTLE_INDEX_REDIS_KEY = 'pine:lightning:settle-index';
@@ -11,14 +12,16 @@ export default class LndService {
     this.database = database;
     this.redis = redis;
     this.notifications = notifications;
+    this.logger = logger.child({ scope: 'LndService' });
 
     if (!config.enabled) {
-      return;
+      return this.logger.warn(`The LND service is not enabled in config`);
     }
 
     this._getSettleIndex()
       .then(settleIndex => {
         this._currentSettleIndex = settleIndex;
+        this.logger.info(`Loaded invoice settle index from redis: ${settleIndex}`, { settleIndex });
 
         if (database.connected) {
           return this._connect();
@@ -27,7 +30,7 @@ export default class LndService {
         database.once('connect', () => this._connect());
       })
       .catch(error => {
-        console.error('[LND] Unable to load settle index from redis:', error.message);
+        this.logger.error(`Unable to load invoice settle index from redis: ${error.message}`);
         process.exit(1);
       });
   }
@@ -46,10 +49,10 @@ export default class LndService {
       .then(lnrpc => {
         this.rpc = lnrpc;
         this._subscribeToInvoices();
-        console.log('[LND] Connected');
+        this.logger.info(`Connected to gateway LND node at ${rpcHost}`);
       })
       .catch(error => {
-        console.error(`[LND] Unable to connect to lnd: ${error.message}`);
+        this.logger.error(`Unable to connect to gateway LND node at ${rpcHost}: ${error.message}`);
       });
   }
 
@@ -71,7 +74,9 @@ export default class LndService {
     this._currentSettleIndex = settleIndex;
 
     this.redis.set(SETTLE_INDEX_REDIS_KEY, settleIndex.toString()).catch(error => {
-      console.error('[LND] Unable to save settle index to redis:', error.message);
+      this.logger.error(`Unable to save invoice settle index to redis: ${error.message}`, {
+        settleIndex
+      });
     });
   }
 
@@ -82,14 +87,22 @@ export default class LndService {
 
     this._invoiceSubscription.on('data', (invoice) => {
       if (invoice.settled && invoice.settle_index >= 0) {
+        this.logger.info('Processing paid lightning invoice...', { settleIndex: invoice.settle_index });
+
         this._onInvoiceSettled(invoice).catch(error => {
-          console.error('[LND] Invoice error:', error.message);
+          this.logger.error(`Lightning invoice processing error: ${error.message}`, {
+            settleIndex: invoice.settle_index
+          });
+        });
+      } else {
+        this.logger.warn('Lightning invoice has already been processed', {
+          settleIndex: invoice.settle_index
         });
       }
     });
 
     this._invoiceSubscription.on('error', (error) => {
-      console.error('[LND] Invoice subscription error:', error.message);
+      this.logger.error(`Invoice subscription error: ${error.message}`);
 
       // Try to reopen subscription.
       setTimeout(this._subscribeToInvoices.bind(this), SUBSCRIPTION_REOPEN_DELAY);
@@ -134,7 +147,11 @@ export default class LndService {
 
     await this._setSettleIndex(settleIndex);
 
-    console.log(`[LND] Invoice paid (id: ${dbInvoice.id}, message-id: ${message.id})`);
+    this.logger.info('Lightning invoice was paid and processed successfully', {
+      invoiceId: dbInvoice.id,
+      messageId: message.id,
+      settleIndex
+    });
   }
 
   async _createMessage(message) {

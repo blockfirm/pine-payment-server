@@ -1,5 +1,6 @@
 import Queue from 'bull';
 import axios from 'axios';
+import logger from '../logger';
 
 export default class NotificationService {
   constructor(config, database) {
@@ -7,6 +8,7 @@ export default class NotificationService {
 
     this.config = config;
     this.database = database;
+    this.logger = logger.child({ scope: 'NotificationService' });
 
     this._queue = new Queue('notifications', {
       redis: config.redis
@@ -19,6 +21,11 @@ export default class NotificationService {
     const query = {
       where: { userId }
     };
+
+    this.logger.info(`Sending notification to user (${userId}): ${type}`, {
+      pineId: userId,
+      notificationType: type
+    });
 
     return this.database.deviceToken.findAll(query).then((deviceTokens) => {
       deviceTokens.forEach((deviceToken) => {
@@ -52,7 +59,7 @@ export default class NotificationService {
         return response.data;
       })
       .catch((error) => {
-        console.error('[NOTIFICATIONS] 🔥 Error calling webhook:', error.message);
+        this.logger.error(`Error when calling notification service: ${error.message}`);
         throw error;
       });
   }
@@ -71,10 +78,15 @@ export default class NotificationService {
       const reason = result.response && result.response.reason;
 
       if (status >= 400 && status < 500) {
-        console.log(`[NOTIFICATIONS] Unsubscribing (${reason}):`, result.device);
+        this.logger.info(`Unsubscribing device token from notifications (${reason}): ${result.device}`, {
+          unsubscribeReason: reason,
+          deviceToken: result.device
+        });
 
         return this.database.deviceToken.destroy({ where: { ios: result.device } }).catch((error) => {
-          console.error('[NOTIFICATIONS] 🔥 Error unsubscribing:', error.message);
+          this.logger.error(`Error when unsubscribing device token: ${error.message}`, {
+            deviceToken: result.device
+          });
         });
       }
     });

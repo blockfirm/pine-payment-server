@@ -1,11 +1,16 @@
 import proxyquire from 'proxyquire';
 import assert from 'assert';
 import sinon from 'sinon';
-import configMock from './configMock';
+
+import winstonMock from './mocks/winston.mock';
+import winstonDailyRotateFileMock from './mocks/winstonDailyRotateFile.mock';
+import configMock from './mocks/config.mock';
 
 const wrapEndpointSpy = sinon.spy();
 
 const setupRoutes = proxyquire('../../src/setupRoutes', {
+  'winston': { ...winstonMock, '@noCallThru': true, '@global': true },
+  'winston-daily-rotate-file': winstonDailyRotateFileMock,
   './config': { ...configMock, '@noCallThru': true, '@global': true },
   '../../config': { ...configMock, '@noCallThru': true, '@global': true },
   './createContext': { default: () => ({}) },

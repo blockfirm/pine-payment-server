@@ -69,6 +69,10 @@ const config = {
 
     // How many percent of the total channel capacity is reserved for fees.
     percentCapacityReservedForFees: 2
+  },
+  log: {
+    level: 'info', // One of 'info', 'warn', 'error'.
+    dir: '/var/log/pine'
   }
 };
 

@@ -1,19 +1,30 @@
 import redis from 'redis';
 import Redlock from 'redlock';
+import logger from '../logger';
 
 const RECONNECT_DELAY = 2000;
 
 export default class RedisClient {
   constructor(config) {
     this.config = config;
-    this._connect();
+    this.logger = logger.child({ scope: 'RedisClient' });
+
+    this._tryConnect();
+  }
+
+  _tryConnect() {
+    try {
+      this._connect();
+    } catch (error) {
+      this.logger.error(`Unable to connect to redis: ${error.message}`);
+    }
   }
 
   _connect() {
     const config = this.config;
 
     if (!config || !config.host) {
-      return;
+      throw new Error('Missing redis configuration');
     }
 
     this.client = redis.createClient(
@@ -26,15 +37,15 @@ export default class RedisClient {
     );
 
     this.client.on('connect', () => {
-      console.log('[REDIS] Connected');
+      this.logger.info(`Connected to redis at ${config.host}:${config.port}`);
     });
 
     this.client.on('reconnecting', () => {
-      console.log('[REDIS] Reconnecting...');
+      this.logger.warn('Reconnecting to redis...');
     });
 
     this.client.on('error', (error) => {
-      console.error('[REDIS] Error:', error.message);
+      this.logger.error(`Redis error: ${error.message}`);
     });
 
     this.redlock = new Redlock([this.client]);

@@ -57,11 +57,15 @@ a decentralized, secure and private manner.
 3. Rename `src/config.template.js` to `src/config.js`
 4. Install a database by following the steps in [Setting up the database](#setting-up-the-database)
 5. Install [Redis](https://redis.io)
-6. Start the server in development mode:
+6. Create a log directory:
+    ```
+    $ mkdir /var/log/pine
+    ```
+7. Start the server in development mode:
     ```
     $ npm run dev
     ```
-7. Or build it and run in production mode:
+8. Or build it and run in production mode:
     ```
     $ npm run build
     $ npm start
