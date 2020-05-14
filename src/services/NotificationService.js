@@ -5,6 +5,7 @@ import logger from '../logger';
 export default class NotificationService {
   constructor(config, database) {
     this.INCOMING_PAYMENT = 'incomingPayment';
+    this.CHANNEL_OPENED = 'channelOpened';
 
     this.config = config;
     this.database = database;

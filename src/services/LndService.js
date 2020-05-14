@@ -48,7 +48,10 @@ export default class LndService {
     return createLnrpc(options)
       .then(lnrpc => {
         this.rpc = lnrpc;
+
         this._subscribeToInvoices();
+        this._subscribeToChannelEvents();
+
         this.logger.info(`Connected to gateway LND node at ${rpcHost}`);
       })
       .catch(error => {
@@ -60,6 +63,11 @@ export default class LndService {
     if (this._invoiceSubscription) {
       this._invoiceSubscription.close();
       delete this._invoiceSubscription;
+    }
+
+    if (this._channelSubscription) {
+      this._channelSubscription.close();
+      delete this._channelSubscription;
     }
 
     delete this.rpc;
@@ -109,6 +117,27 @@ export default class LndService {
     });
   }
 
+  async _subscribeToChannelEvents() {
+    this._channelSubscription = this.rpc.subscribeChannelEvents({});
+
+    this._channelSubscription.on('data', (channelEvent) => {
+      if (!channelEvent || !channelEvent.open_channel) {
+        return;
+      }
+
+      this._onChannelOpened(channelEvent.open_channel).catch(error => {
+        this.logger.error(`Channel opened notification error: ${error.message}`);
+      });
+    });
+
+    this._channelSubscription.on('error', (error) => {
+      this.logger.error(`Channel subscription error: ${error.message}`);
+
+      // Try to reopen subscription.
+      setTimeout(this._subscribeToChannelEvents.bind(this), SUBSCRIPTION_REOPEN_DELAY);
+    });
+  }
+
   // eslint-disable-next-line max-statements
   async _onInvoiceSettled(lndInvoice) {
     const settleIndex = parseInt(lndInvoice.settle_index.toString());
@@ -152,6 +181,24 @@ export default class LndService {
       messageId: message.id,
       settleIndex
     });
+  }
+
+  async _onChannelOpened(channel) {
+    const { notifications, redis } = this;
+    const channelId = channel.chan_id;
+    const remotePubKey = channel.remote_pubkey;
+
+    if (!remotePubKey) {
+      throw new Error('Channel (ID: `${channelId}`) is missing remote public key (remote_pubkey)');
+    }
+
+    const userId = await redis.get(`pine:lightning:node:${remotePubKey}:pine-id`);
+
+    if (!userId) {
+      throw new Error(`No user could be found for channel with ID ${channelId}`);
+    }
+
+    notifications.notify(userId, notifications.CHANNEL_OPENED);
   }
 
   async _createMessage(message) {
